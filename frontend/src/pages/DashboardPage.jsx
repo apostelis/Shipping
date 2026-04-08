@@ -6,6 +6,7 @@ import KpiCard from '../components/KpiCard'
 import { SkeletonCard } from '../components/LoadingSkeleton'
 import LiveTicker from '../components/LiveTicker'
 import FinancialImpact from '../components/FinancialImpact'
+import RoiCalculator from '../components/RoiCalculator'
 
 export default function DashboardPage() {
   const { activeScenario, scenarios } = useScenario()
@@ -46,11 +47,10 @@ export default function DashboardPage() {
         <LiveTicker />
       </div>
 
-      <div className="grid grid-cols-5 gap-6">
-        <div className="col-span-2">
-          <FinancialImpact scenarioId={activeScenario} />
-        </div>
-        <div className="col-span-3 space-y-4">
+      <div className="grid grid-cols-3 gap-6">
+        <FinancialImpact scenarioId={activeScenario} />
+        <RoiCalculator scenarioId={activeScenario} />
+        <div className="space-y-4">
           <a href="/routes" className={`block rounded-stripe p-5 transition-shadow border ${
             dark
               ? 'bg-white/5 border-white/5 hover:border-violet-500/20'
