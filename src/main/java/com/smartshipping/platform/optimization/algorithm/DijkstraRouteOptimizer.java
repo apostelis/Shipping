@@ -183,7 +183,10 @@ public class DijkstraRouteOptimizer {
     public void loadFromShippingLanes(List<LaneData> lanes) {
         for (LaneData lane : lanes) {
             BigDecimal cost = calculateLaneCost(lane);
-            addEdge(lane.originPortCode(), lane.destinationPortCode(), 
+            addEdge(lane.originPortCode(), lane.destinationPortCode(),
+                    lane.distanceNm(), lane.estimatedTimeHours(), cost);
+            // Shipping lanes are bidirectional
+            addEdge(lane.destinationPortCode(), lane.originPortCode(),
                     lane.distanceNm(), lane.estimatedTimeHours(), cost);
         }
     }
