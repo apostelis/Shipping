@@ -18,19 +18,21 @@ export default function RoutesPage() {
     api.getPorts().then((data) => {
       setPorts(data)
       if (data.length >= 2) {
-        setOrigin(data.find(p => p.code === 'SHANGHAI')?.code || data[0].code)
-        setDestination(data.find(p => p.code === 'ROTTERDAM')?.code || data[1].code)
+        const o = data.find(p => p.code === 'CNSHA')?.code || data[0].code
+        const d = data.find(p => p.code === 'NLRTM')?.code || data[1].code
+        setOrigin(o)
+        setDestination(d)
       }
     })
   }, [])
 
-  const handleOptimize = async () => {
-    if (!origin || !destination) return
+  const runOptimize = async (o, d, obj) => {
+    if (!o || !d) return
     setLoading(true)
     try {
       const [optimized, alts] = await Promise.all([
-        api.optimizeRoute({ originPortCode: origin, destinationPortCode: destination, objectiveType: objective }),
-        api.getAlternativeRoutes(origin, destination, 3),
+        api.optimizeRoute({ originPortCode: o, destinationPortCode: d, objectiveType: obj }),
+        api.getAlternativeRoutes(o, d, 3),
       ])
       setResult(optimized)
       setAlternatives(alts)
@@ -38,6 +40,13 @@ export default function RoutesPage() {
       setLoading(false)
     }
   }
+
+  // Auto-optimize on first load
+  useEffect(() => {
+    if (origin && destination) runOptimize(origin, destination, objective)
+  }, [origin, destination])
+
+  const handleOptimize = () => runOptimize(origin, destination, objective)
 
   const getPortCoords = (code) => {
     const p = ports.find(port => port.code === code)
