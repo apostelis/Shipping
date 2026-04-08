@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, CircleMarker, Popup, Polyline, useMap } from 'react-leaflet'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect } from 'react'
 import 'leaflet/dist/leaflet.css'
 import { useTheme } from '../hooks/useTheme'
 
@@ -31,69 +31,6 @@ function AnimatedRoute({ positions, color, width, animated, glowColor }) {
           lineCap: 'round',
           dashArray: animated ? '12 8' : undefined,
         }}
-      />
-    </>
-  )
-}
-
-function MovingVessel({ positions, color, dark }) {
-  const [pos, setPos] = useState(positions[0])
-  const progressRef = useRef(0)
-
-  useEffect(() => {
-    if (!positions || positions.length < 2) return
-
-    // Calculate total path length in simple coordinate distance
-    const segments = []
-    let totalLen = 0
-    for (let i = 0; i < positions.length - 1; i++) {
-      const dx = positions[i + 1][1] - positions[i][1]
-      const dy = positions[i + 1][0] - positions[i][0]
-      const len = Math.sqrt(dx * dx + dy * dy)
-      segments.push({ start: positions[i], end: positions[i + 1], len })
-      totalLen += len
-    }
-
-    let animId
-    const speed = 0.003 // progress per frame (0 to 1)
-
-    function tick() {
-      progressRef.current = (progressRef.current + speed) % 1
-      const targetDist = progressRef.current * totalLen
-
-      let accumulated = 0
-      for (const seg of segments) {
-        if (accumulated + seg.len >= targetDist) {
-          const t = (targetDist - accumulated) / seg.len
-          const lat = seg.start[0] + t * (seg.end[0] - seg.start[0])
-          const lng = seg.start[1] + t * (seg.end[1] - seg.start[1])
-          setPos([lat, lng])
-          break
-        }
-        accumulated += seg.len
-      }
-      animId = requestAnimationFrame(tick)
-    }
-
-    animId = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(animId)
-  }, [positions])
-
-  if (!pos) return null
-
-  return (
-    <>
-      {/* Glow */}
-      <CircleMarker
-        center={pos}
-        radius={12}
-        pathOptions={{ color, fillColor: color, fillOpacity: 0.15, weight: 0, stroke: false }}
-      />
-      {/* Vessel dot */}
-      <CircleMarker
-        center={pos}
-        radius={5}
-        pathOptions={{ color: '#fff', fillColor: color, fillOpacity: 1, weight: 2 }}
       />
     </>
   )
@@ -160,9 +97,6 @@ export default function RouteMap({ ports, optimizedRoute, naiveRoute, originCode
         <AnimatedRoute positions={optimizedRoute} color={colors.optimized} width={3} animated={false} />
       )}
 
-      {optimizedRoute && optimizedRoute.length >= 2 && (
-        <MovingVessel positions={optimizedRoute} color={colors.optimized} dark={dark} />
-      )}
     </MapContainer>
   )
 }
