@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useScenario } from '../hooks/useScenario'
+import { useTheme } from '../hooks/useTheme'
 import { api } from '../api/client'
 import KpiCard from '../components/KpiCard'
 import { SkeletonCard } from '../components/LoadingSkeleton'
@@ -8,6 +9,7 @@ import FinancialImpact from '../components/FinancialImpact'
 
 export default function DashboardPage() {
   const { activeScenario, scenarios } = useScenario()
+  const { dark } = useTheme()
   const [kpis, setKpis] = useState(null)
 
   useEffect(() => {
@@ -21,7 +23,7 @@ export default function DashboardPage() {
       <div className="mb-8">
         <h2>AI Shipping Intelligence</h2>
         {scenario && (
-          <p className="text-stripe-body mt-2 text-base font-light">
+          <p className={`mt-2 text-base font-light ${dark ? 'text-white/40' : 'text-stripe-body'}`}>
             {scenario.description}
           </p>
         )}
@@ -49,19 +51,27 @@ export default function DashboardPage() {
           <FinancialImpact scenarioId={activeScenario} />
         </div>
         <div className="col-span-3 space-y-4">
-          <a href="/routes" className="block bg-white border border-stripe-border rounded-stripe p-5 shadow-stripe-ambient hover:shadow-stripe transition-shadow">
+          <a href="/routes" className={`block rounded-stripe p-5 transition-shadow border ${
+            dark
+              ? 'bg-white/5 border-white/5 hover:border-violet-500/20'
+              : 'bg-white border-stripe-border shadow-stripe-ambient hover:shadow-stripe'
+          }`}>
             <h3>Route Optimizer</h3>
-            <p className="text-stripe-body text-sm mt-1 font-light">
+            <p className={`text-sm mt-1 font-light ${dark ? 'text-white/40' : 'text-stripe-body'}`}>
               AI-powered cost, time, and distance optimization across global shipping lanes.
             </p>
-            <span className="inline-block mt-3 text-sm text-stripe-purple font-normal">Explore routes &rarr;</span>
+            <span className={`inline-block mt-3 text-sm font-normal ${dark ? 'text-violet-400' : 'text-stripe-purple'}`}>Explore routes &rarr;</span>
           </a>
-          <a href="/forecast" className="block bg-white border border-stripe-border rounded-stripe p-5 shadow-stripe-ambient hover:shadow-stripe transition-shadow">
+          <a href="/forecast" className={`block rounded-stripe p-5 transition-shadow border ${
+            dark
+              ? 'bg-white/5 border-white/5 hover:border-violet-500/20'
+              : 'bg-white border-stripe-border shadow-stripe-ambient hover:shadow-stripe'
+          }`}>
             <h3>Demand Forecast</h3>
-            <p className="text-stripe-body text-sm mt-1 font-light">
+            <p className={`text-sm mt-1 font-light ${dark ? 'text-white/40' : 'text-stripe-body'}`}>
               Predictive demand intelligence with confidence intervals and early warning.
             </p>
-            <span className="inline-block mt-3 text-sm text-stripe-purple font-normal">View forecasts &rarr;</span>
+            <span className={`inline-block mt-3 text-sm font-normal ${dark ? 'text-violet-400' : 'text-stripe-purple'}`}>View forecasts &rarr;</span>
           </a>
         </div>
       </div>

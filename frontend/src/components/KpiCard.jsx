@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import { useTheme } from '../hooks/useTheme'
 
 export default function KpiCard({ label, value, unit, trend, description }) {
+  const { dark } = useTheme()
   const [displayed, setDisplayed] = useState(0)
 
   useEffect(() => {
@@ -26,13 +28,17 @@ export default function KpiCard({ label, value, unit, trend, description }) {
   const trendArrow = trend === 'up' ? '\u2191' : '\u2193'
 
   return (
-    <div className="bg-white border border-stripe-border rounded-stripe p-6 shadow-stripe-ambient hover:shadow-stripe-sm transition-shadow">
-      <p className="text-sm text-stripe-body font-normal">{label}</p>
+    <div className={`rounded-stripe p-6 transition-shadow border ${
+      dark
+        ? 'bg-white/5 border-white/5'
+        : 'bg-white border-stripe-border shadow-stripe-ambient hover:shadow-stripe-sm'
+    }`}>
+      <p className={`text-sm font-normal ${dark ? 'text-white/40' : 'text-stripe-body'}`}>{label}</p>
       <div className="flex items-baseline gap-2 mt-2">
-        <span className="text-3xl font-light tracking-tight text-stripe-navy animate-count-up">
+        <span className={`text-3xl font-light tracking-tight animate-count-up ${dark ? 'text-white/90' : 'text-stripe-navy'}`}>
           {displayed}
         </span>
-        <span className="text-lg text-stripe-body font-light">{unit}</span>
+        <span className={`text-lg font-light ${dark ? 'text-white/30' : 'text-stripe-body'}`}>{unit}</span>
         {trend && (
           <span className={`text-sm font-normal ${trendColor}`}>
             {trendArrow}
@@ -40,7 +46,7 @@ export default function KpiCard({ label, value, unit, trend, description }) {
         )}
       </div>
       {description && (
-        <p className="text-xs text-stripe-body mt-2">{description}</p>
+        <p className={`text-xs mt-2 ${dark ? 'text-white/20' : 'text-stripe-body'}`}>{description}</p>
       )}
     </div>
   )

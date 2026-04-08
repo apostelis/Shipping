@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api/client'
 import { useScenario } from '../hooks/useScenario'
+import { useTheme } from '../hooks/useTheme'
 import RouteMap from '../components/RouteMap'
 import ComparisonTable from '../components/ComparisonTable'
 
@@ -14,6 +15,7 @@ const fmtHours = (h) => {
 
 export default function RoutesPage() {
   const { activeScenario } = useScenario()
+  const { dark } = useTheme()
   const [ports, setPorts] = useState([])
   const [origin, setOrigin] = useState('')
   const [destination, setDestination] = useState('')
@@ -71,25 +73,28 @@ export default function RoutesPage() {
   const optimizedCoords = result ? routeToCoords(result) : null
   const naiveCoords = (origin && destination) ? [getPortCoords(origin), getPortCoords(destination)].filter(Boolean) : null
 
+  const selectClass = `border rounded px-3 py-2 text-sm focus:outline-none ${
+    dark
+      ? 'bg-white/5 border-white/10 text-white/80 focus:border-violet-500'
+      : 'bg-white border-stripe-border text-stripe-navy focus:border-stripe-purple'
+  }`
+
   return (
     <div className="p-8 max-w-6xl animate-page-in">
       <h2>Route Optimizer</h2>
-      <p className="text-stripe-body mt-2 mb-6 font-light">
+      <p className={`mt-2 mb-6 font-light ${dark ? 'text-white/40' : 'text-stripe-body'}`}>
         Select origin and destination ports to find AI-optimized shipping routes.
       </p>
 
       <div className="flex gap-4 mb-6">
-        <select value={origin} onChange={e => setOrigin(e.target.value)}
-          className="border border-stripe-border rounded px-3 py-2 text-sm text-stripe-navy focus:border-stripe-purple focus:outline-none">
+        <select value={origin} onChange={e => setOrigin(e.target.value)} className={selectClass}>
           {ports.map(p => <option key={p.code} value={p.code}>{p.name}</option>)}
         </select>
-        <span className="self-center text-stripe-body">&rarr;</span>
-        <select value={destination} onChange={e => setDestination(e.target.value)}
-          className="border border-stripe-border rounded px-3 py-2 text-sm text-stripe-navy focus:border-stripe-purple focus:outline-none">
+        <span className={`self-center ${dark ? 'text-white/30' : 'text-stripe-body'}`}>&rarr;</span>
+        <select value={destination} onChange={e => setDestination(e.target.value)} className={selectClass}>
           {ports.map(p => <option key={p.code} value={p.code}>{p.name}</option>)}
         </select>
-        <select value={objective} onChange={e => setObjective(e.target.value)}
-          className="border border-stripe-border rounded px-3 py-2 text-sm text-stripe-navy focus:border-stripe-purple focus:outline-none">
+        <select value={objective} onChange={e => setObjective(e.target.value)} className={selectClass}>
           <option value="BALANCED">Balanced</option>
           <option value="COST">Minimize Cost</option>
           <option value="TIME">Minimize Time</option>
