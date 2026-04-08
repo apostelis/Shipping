@@ -101,7 +101,7 @@ export default function RoutesPage() {
         </button>
       </div>
 
-      <RouteMap ports={ports} optimizedRoute={optimizedCoords} naiveRoute={naiveCoords} />
+      <RouteMap ports={ports} optimizedRoute={optimizedCoords} naiveRoute={naiveCoords} originCode={origin} destinationCode={destination} />
 
       {result && (
         <div className="mt-6 space-y-6">
