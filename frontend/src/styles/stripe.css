@@ -71,24 +71,29 @@ main h3 { font-size: 1.375rem; letter-spacing: -0.22px; line-height: 1.10; }
 }
 
 /* Dark map theme */
-.leaflet-container {
+.dark .leaflet-container {
   background: #0a0f1e !important;
 }
 
-.leaflet-control-attribution {
+.dark .leaflet-control-attribution {
   background: rgba(10, 15, 30, 0.8) !important;
   color: rgba(255,255,255,0.3) !important;
   font-size: 9px !important;
 }
 
-.leaflet-control-attribution a {
+.dark .leaflet-control-attribution a {
   color: rgba(255,255,255,0.3) !important;
 }
 
-.leaflet-control-zoom a {
+.dark .leaflet-control-zoom a {
   background: rgba(30, 35, 55, 0.9) !important;
   color: rgba(255,255,255,0.7) !important;
   border-color: rgba(255,255,255,0.1) !important;
+}
+
+/* Light map controls */
+.leaflet-control-attribution {
+  font-size: 9px !important;
 }
 
 .leaflet-popup-content-wrapper {

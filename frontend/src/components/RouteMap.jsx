@@ -1,6 +1,7 @@
 import { MapContainer, TileLayer, CircleMarker, Popup, Polyline, useMap } from 'react-leaflet'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import 'leaflet/dist/leaflet.css'
+import { useTheme } from '../hooks/useTheme'
 
 function FitBounds({ ports }) {
   const map = useMap()
@@ -13,16 +14,14 @@ function FitBounds({ ports }) {
   return null
 }
 
-function AnimatedRoute({ positions, color, width, animated }) {
+function AnimatedRoute({ positions, color, width, animated, glowColor }) {
   if (!positions || positions.length < 2) return null
   return (
     <>
-      {/* Glow layer */}
       <Polyline
         positions={positions}
-        pathOptions={{ color, weight: width + 6, opacity: 0.15, lineCap: 'round' }}
+        pathOptions={{ color: glowColor || color, weight: width + 6, opacity: 0.15, lineCap: 'round' }}
       />
-      {/* Main line */}
       <Polyline
         positions={positions}
         pathOptions={{
@@ -38,20 +37,32 @@ function AnimatedRoute({ positions, color, width, animated }) {
 }
 
 export default function RouteMap({ ports, optimizedRoute, naiveRoute, originCode, destinationCode }) {
+  const { dark } = useTheme()
+
+  const tiles = dark
+    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+    : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+
+  const bg = dark ? '#0a0f1e' : '#f8fafc'
+
+  const colors = dark
+    ? { origin: '#22d3ee', dest: '#a78bfa', port: 'rgba(255,255,255,0.4)', portFill: 'rgba(255,255,255,0.6)', optimized: '#a78bfa', naive: '#475569' }
+    : { origin: '#533afd', dest: '#ea2261', port: 'rgba(83,58,253,0.3)', portFill: 'rgba(83,58,253,0.5)', optimized: '#533afd', naive: '#94a3b8' }
+
   return (
     <MapContainer
       center={[25, 45]}
       zoom={3}
-      className="h-[520px] w-full rounded-stripe border border-stripe-border/30 shadow-stripe"
-      style={{ background: '#0a0f1e' }}
+      className={`h-[520px] w-full rounded-stripe border shadow-stripe ${dark ? 'border-white/10' : 'border-stripe-border'}`}
+      style={{ background: bg }}
     >
       <TileLayer
+        key={dark ? 'dark' : 'light'}
         attribution='&copy; CartoDB'
-        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        url={tiles}
       />
       <FitBounds ports={ports} />
 
-      {/* Port markers */}
       {ports.map((port) => {
         const isOrigin = port.code === originCode
         const isDestination = port.code === destinationCode
@@ -62,8 +73,8 @@ export default function RouteMap({ ports, optimizedRoute, naiveRoute, originCode
             center={[parseFloat(port.latitude), parseFloat(port.longitude)]}
             radius={isHighlighted ? 8 : 4}
             pathOptions={{
-              color: isOrigin ? '#22d3ee' : isDestination ? '#a78bfa' : 'rgba(255,255,255,0.4)',
-              fillColor: isOrigin ? '#22d3ee' : isDestination ? '#a78bfa' : 'rgba(255,255,255,0.6)',
+              color: isOrigin ? colors.origin : isDestination ? colors.dest : colors.port,
+              fillColor: isOrigin ? colors.origin : isDestination ? colors.dest : colors.portFill,
               fillOpacity: isHighlighted ? 1 : 0.5,
               weight: isHighlighted ? 3 : 1,
             }}
@@ -78,14 +89,12 @@ export default function RouteMap({ ports, optimizedRoute, naiveRoute, originCode
         )
       })}
 
-      {/* Naive route - dim dashed */}
       {naiveRoute && (
-        <AnimatedRoute positions={naiveRoute} color="#475569" width={1.5} animated={true} />
+        <AnimatedRoute positions={naiveRoute} color={colors.naive} width={1.5} animated={true} />
       )}
 
-      {/* Optimized route - bright with glow */}
       {optimizedRoute && (
-        <AnimatedRoute positions={optimizedRoute} color="#a78bfa" width={3} animated={false} />
+        <AnimatedRoute positions={optimizedRoute} color={colors.optimized} width={3} animated={false} />
       )}
     </MapContainer>
   )

@@ -111,15 +111,15 @@ export default function RoutesPage() {
       {result && (
         <div className="mt-6 space-y-6">
           {result.totalCost > 0 && (
-            <div className="bg-gray-950 border border-violet-500/20 rounded-stripe p-4 flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-violet-500/10 flex items-center justify-center shrink-0">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a78bfa" strokeWidth="1.5">
+            <div className={`rounded-stripe p-4 flex items-center gap-4 border ${dark ? 'bg-gray-950 border-violet-500/20' : 'bg-stripe-purple/5 border-stripe-purple/20'}`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${dark ? 'bg-violet-500/10' : 'bg-stripe-purple/10'}`}>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke={dark ? '#a78bfa' : '#533afd'} strokeWidth="1.5">
                   <path d="M10 2l2.5 5 5.5.8-4 3.9.9 5.3-4.9-2.6-4.9 2.6.9-5.3-4-3.9 5.5-.8z"/>
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-sm font-normal text-white/90">Route optimized — {result.segments?.length || 0} segments</p>
-                <p className="text-xs text-white/40">
+                <p className={`text-sm font-normal ${dark ? 'text-white/90' : 'text-stripe-navy'}`}>Route optimized — {result.segments?.length || 0} segments</p>
+                <p className={`text-xs ${dark ? 'text-white/40' : 'text-stripe-body'}`}>
                   {result.segments?.map(s => s.originPortCode).join(' → ')} → {result.segments?.[result.segments.length - 1]?.destinationPortCode}
                 </p>
               </div>
@@ -134,17 +134,17 @@ export default function RoutesPage() {
               <h3 className="mb-3">Alternative Routes</h3>
               <div className="grid grid-cols-3 gap-3">
                 {alternatives.map((alt, i) => (
-                  <div key={alt.routeId} className="bg-gray-950 border border-white/5 rounded-stripe p-4 hover:border-violet-500/20 transition-colors">
+                  <div key={alt.routeId} className={`border rounded-stripe p-4 transition-colors ${dark ? 'bg-gray-950 border-white/5 hover:border-violet-500/20' : 'bg-white border-stripe-border hover:border-stripe-purple/30 shadow-stripe-ambient'}`}>
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-sm font-normal text-white/80">Route {i + 1}</p>
-                      <span className="text-[10px] text-white/30 font-mono">{parseFloat(alt.totalDistanceNm).toLocaleString()} nm</span>
+                      <p className={`text-sm font-normal ${dark ? 'text-white/80' : 'text-stripe-navy'}`}>Route {i + 1}</p>
+                      <span className={`text-[10px] font-mono ${dark ? 'text-white/30' : 'text-stripe-body'}`}>{parseFloat(alt.totalDistanceNm).toLocaleString()} nm</span>
                     </div>
-                    <p className="text-[10px] text-white/40 mb-3">
+                    <p className={`text-[10px] mb-3 ${dark ? 'text-white/40' : 'text-stripe-body'}`}>
                       {alt.segments?.map(s => s.originPortCode).join(' → ')} → {alt.segments?.[alt.segments.length - 1]?.destinationPortCode}
                     </p>
                     <div className="flex gap-4 text-xs">
                       <span className="text-emerald-400">${parseFloat(alt.totalCost).toLocaleString()}</span>
-                      <span className="text-white/50">{fmtHours(alt.totalTimeHours)}</span>
+                      <span className={dark ? 'text-white/50' : 'text-stripe-body'}>{fmtHours(alt.totalTimeHours)}</span>
                     </div>
                   </div>
                 ))}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTheme } from '../hooks/useTheme'
 
 const EVENTS = [
   { type: 'vessel', text: 'MSC Aurora departed Shanghai → Rotterdam', time: '2m ago' },
@@ -40,15 +41,17 @@ export default function LiveTicker() {
     return () => clearInterval(interval)
   }, [])
 
+  const { dark } = useTheme()
+
   return (
-    <div className="bg-gray-950 border border-white/5 rounded-stripe px-4 py-2.5 overflow-hidden">
+    <div className={`border rounded-stripe px-4 py-2.5 overflow-hidden ${dark ? 'bg-gray-950 border-white/5' : 'bg-gray-50 border-stripe-border'}`}>
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2 shrink-0">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
           </span>
-          <span className="text-[10px] font-medium tracking-widest text-white/40 uppercase">Live</span>
+          <span className={`text-[10px] font-medium tracking-widest uppercase ${dark ? 'text-white/40' : 'text-stripe-body'}`}>Live</span>
         </div>
         <div className="flex-1 flex gap-8 overflow-hidden">
           {visibleEvents.map((event, i) => {
@@ -57,8 +60,8 @@ export default function LiveTicker() {
               <div key={`${offset}-${i}`} className="flex items-center gap-2 shrink-0 animate-page-in">
                 <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`}></span>
                 <span className={`text-[10px] font-medium tracking-wider ${style.labelClass}`}>{style.label}</span>
-                <span className="text-xs text-white/70 font-light">{event.text}</span>
-                <span className="text-[10px] text-white/30">{event.time}</span>
+                <span className={`text-xs font-light ${dark ? 'text-white/70' : 'text-stripe-navy'}`}>{event.text}</span>
+                <span className={`text-[10px] ${dark ? 'text-white/30' : 'text-stripe-body'}`}>{event.time}</span>
               </div>
             )
           })}

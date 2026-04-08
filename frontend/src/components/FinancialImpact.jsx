@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTheme } from '../hooks/useTheme'
 
 function AnimatedDollar({ value, prefix = '$', duration = 1200 }) {
   const [displayed, setDisplayed] = useState(0)
@@ -28,43 +29,48 @@ const scenarios = {
 
 export default function FinancialImpact({ scenarioId }) {
   const data = scenarios[scenarioId] || scenarios.normal
+  const { dark } = useTheme()
+
+  const label = dark ? 'text-white/30' : 'text-stripe-body'
+  const sub = dark ? 'text-white/20' : 'text-stripe-body/60'
+  const forecastVal = dark ? 'text-white/80' : 'text-stripe-navy'
 
   return (
-    <div className="bg-gray-950 border border-white/5 rounded-stripe p-5">
+    <div className={`border rounded-stripe p-5 ${dark ? 'bg-gray-950 border-white/5' : 'bg-gray-50 border-stripe-border'}`}>
       <div className="flex items-center gap-2 mb-4">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#a78bfa" strokeWidth="1.5">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke={dark ? '#a78bfa' : '#533afd'} strokeWidth="1.5">
           <path d="M8 1v14M4.5 4h7a2.5 2.5 0 010 5H5a2.5 2.5 0 000 5h7.5"/>
         </svg>
-        <span className="text-xs font-medium tracking-wider text-white/40 uppercase">Financial Impact</span>
+        <span className={`text-xs font-medium tracking-wider uppercase ${dark ? 'text-white/40' : 'text-stripe-body'}`}>Financial Impact</span>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Savings Captured</p>
+          <p className={`text-[10px] uppercase tracking-wider mb-1 ${label}`}>Savings Captured</p>
           <p className="text-2xl font-light text-emerald-400 tracking-tight">
             <AnimatedDollar value={data.saved} />
           </p>
-          <p className="text-[10px] text-white/20 mt-1">this quarter</p>
+          <p className={`text-[10px] mt-1 ${sub}`}>this quarter</p>
         </div>
         <div>
-          <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Revenue at Risk</p>
+          <p className={`text-[10px] uppercase tracking-wider mb-1 ${label}`}>Revenue at Risk</p>
           <p className="text-2xl font-light text-amber-400 tracking-tight">
             <AnimatedDollar value={data.atRisk} />
           </p>
-          <p className="text-[10px] text-white/20 mt-1">without AI mitigation</p>
+          <p className={`text-[10px] mt-1 ${sub}`}>without AI mitigation</p>
         </div>
         <div>
-          <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Forecast Revenue</p>
-          <p className="text-2xl font-light text-white/80 tracking-tight">
+          <p className={`text-[10px] uppercase tracking-wider mb-1 ${label}`}>Forecast Revenue</p>
+          <p className={`text-2xl font-light tracking-tight ${forecastVal}`}>
             <AnimatedDollar value={data.forecast} />
           </p>
-          <p className="text-[10px] text-white/20 mt-1">next 30 days</p>
+          <p className={`text-[10px] mt-1 ${sub}`}>next 30 days</p>
         </div>
         <div>
-          <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Routes Optimized</p>
+          <p className={`text-[10px] uppercase tracking-wider mb-1 ${label}`}>Routes Optimized</p>
           <p className="text-2xl font-light text-violet-400 tracking-tight">
             <AnimatedDollar value={data.optimized} prefix="" />
           </p>
-          <p className="text-[10px] text-white/20 mt-1">active lanes</p>
+          <p className={`text-[10px] mt-1 ${sub}`}>active lanes</p>
         </div>
       </div>
     </div>
