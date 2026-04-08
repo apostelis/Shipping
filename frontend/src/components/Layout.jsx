@@ -2,9 +2,9 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { useScenario } from '../hooks/useScenario'
 
 const navItems = [
-  { to: '/', label: 'Dashboard', icon: '\u25A6' },
-  { to: '/routes', label: 'Route Optimizer', icon: '\u25C8' },
-  { to: '/forecast', label: 'Demand Forecast', icon: '\u25F2' },
+  { to: '/', label: 'Dashboard', icon: <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="1" width="7" height="7" rx="1"/><rect x="10" y="1" width="7" height="7" rx="1"/><rect x="1" y="10" width="7" height="7" rx="1"/><rect x="10" y="10" width="7" height="7" rx="1"/></svg> },
+  { to: '/routes', label: 'Route Optimizer', icon: <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 15l4-6 4 3 4-7"/><circle cx="3" cy="15" r="1.5"/><circle cx="15" cy="5" r="1.5"/></svg> },
+  { to: '/forecast', label: 'Demand Forecast', icon: <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 13l4-4 4 2 8-8"/><path d="M13 3h4v4"/></svg> },
 ]
 
 export default function Layout() {
@@ -12,7 +12,7 @@ export default function Layout() {
 
   return (
     <div className="flex h-screen bg-white">
-      <aside className="w-60 border-r border-stripe-border flex flex-col">
+      <aside className="w-60 shrink-0 border-r border-stripe-border flex flex-col">
         <div className="p-6 border-b border-stripe-border">
           <h1 className="text-lg font-light tracking-tight text-stripe-navy">
             SmartShipping
@@ -33,7 +33,7 @@ export default function Layout() {
                 }`
               }
             >
-              <span className="text-base">{icon}</span>
+              {icon}
               {label}
             </NavLink>
           ))}
