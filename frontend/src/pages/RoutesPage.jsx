@@ -55,7 +55,7 @@ export default function RoutesPage() {
   const naiveCoords = (origin && destination) ? [getPortCoords(origin), getPortCoords(destination)].filter(Boolean) : null
 
   return (
-    <div className="p-8 max-w-6xl">
+    <div className="p-8 max-w-6xl animate-page-in">
       <h2>Route Optimizer</h2>
       <p className="text-stripe-body mt-2 mb-6 font-light">
         Select origin and destination ports to find AI-optimized shipping routes.
@@ -95,6 +95,7 @@ export default function RoutesPage() {
                 <p className="text-sm font-normal text-stripe-navy">Route optimized with {result.segments?.length || 0} stops</p>
                 <p className="text-xs text-stripe-body">Total cost: ${parseFloat(result.totalCost).toLocaleString()} | Transit: {parseFloat(result.totalTimeHours).toFixed(0)}h</p>
               </div>
+              <span className="ai-badge">Powered by AI</span>
             </div>
           )}
 

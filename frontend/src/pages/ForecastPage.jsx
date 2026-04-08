@@ -38,7 +38,7 @@ export default function ForecastPage() {
   const isDemandSpike = activeScenario === 'demand-spike' && selectedLane === 'MED-NORTHEUROPE'
 
   return (
-    <div className="p-8 max-w-6xl">
+    <div className="p-8 max-w-6xl animate-page-in">
       <h2>Demand Forecast</h2>
       <p className="text-stripe-body mt-2 mb-6 font-light">
         AI-powered demand prediction with confidence intervals across shipping lanes.
@@ -94,6 +94,7 @@ export default function ForecastPage() {
               {parseFloat(forecast.confidenceLower).toLocaleString()} - {parseFloat(forecast.confidenceUpper).toLocaleString()} TEU
             </p>
           </div>
+          <span className="ai-badge">Powered by AI</span>
           {forecast.accuracyMape && (
             <div className="bg-white border border-stripe-border rounded-stripe px-4 py-3">
               <span className="inline-block bg-green-50 text-stripe-success-text text-xs px-2 py-0.5 rounded border border-green-200 font-normal">

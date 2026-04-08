@@ -14,7 +14,7 @@ export default function DashboardPage() {
   const scenario = scenarios.find(s => s.id === activeScenario)
 
   return (
-    <div className="p-8 max-w-6xl">
+    <div className="p-8 max-w-6xl animate-page-in">
       <div className="mb-8">
         <h2>AI Shipping Intelligence</h2>
         {scenario && (
