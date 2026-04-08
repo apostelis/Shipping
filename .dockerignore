@@ -1,0 +1,7 @@
+.git
+.idea
+.mvn
+src/test
+*.md
+Dockerfile
+docker-compose.yml

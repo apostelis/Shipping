@@ -1,3 +1,7 @@
+---
+apply: always
+---
+
 # Java Implementation Rules for Shipping Intelligence Platform
 
 ## Overview
