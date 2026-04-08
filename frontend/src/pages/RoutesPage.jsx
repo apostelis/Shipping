@@ -106,11 +106,17 @@ export default function RoutesPage() {
       {result && (
         <div className="mt-6 space-y-6">
           {result.totalCost > 0 && (
-            <div className="bg-stripe-purple/5 border border-stripe-purple-light rounded-stripe p-4 flex items-center gap-3">
-              <span className="text-stripe-purple text-2xl font-light">AI</span>
-              <div>
-                <p className="text-sm font-normal text-stripe-navy">Route optimized with {result.segments?.length || 0} stops</p>
-                <p className="text-xs text-stripe-body">Total cost: ${parseFloat(result.totalCost).toLocaleString()} | Transit: {fmtHours(result.totalTimeHours)}</p>
+            <div className="bg-gray-950 border border-violet-500/20 rounded-stripe p-4 flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-violet-500/10 flex items-center justify-center shrink-0">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a78bfa" strokeWidth="1.5">
+                  <path d="M10 2l2.5 5 5.5.8-4 3.9.9 5.3-4.9-2.6-4.9 2.6.9-5.3-4-3.9 5.5-.8z"/>
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-normal text-white/90">Route optimized — {result.segments?.length || 0} segments</p>
+                <p className="text-xs text-white/40">
+                  {result.segments?.map(s => s.originPortCode).join(' → ')} → {result.segments?.[result.segments.length - 1]?.destinationPortCode}
+                </p>
               </div>
               <span className="ai-badge">Powered by AI</span>
             </div>
@@ -121,17 +127,19 @@ export default function RoutesPage() {
           {alternatives.length > 1 && (
             <div>
               <h3 className="mb-3">Alternative Routes</h3>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-3">
                 {alternatives.map((alt, i) => (
-                  <div key={alt.routeId} className="bg-white border border-stripe-border rounded-stripe p-4 shadow-stripe-ambient">
-                    <p className="text-sm font-normal text-stripe-navy">Route {i + 1}</p>
-                    <p className="text-xs text-stripe-body mt-1">
+                  <div key={alt.routeId} className="bg-gray-950 border border-white/5 rounded-stripe p-4 hover:border-violet-500/20 transition-colors">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm font-normal text-white/80">Route {i + 1}</p>
+                      <span className="text-[10px] text-white/30 font-mono">{parseFloat(alt.totalDistanceNm).toLocaleString()} nm</span>
+                    </div>
+                    <p className="text-[10px] text-white/40 mb-3">
                       {alt.segments?.map(s => s.originPortCode).join(' → ')} → {alt.segments?.[alt.segments.length - 1]?.destinationPortCode}
                     </p>
-                    <div className="mt-2 flex gap-4 text-xs text-stripe-body">
-                      <span>${parseFloat(alt.totalCost).toLocaleString()}</span>
-                      <span>{fmtHours(alt.totalTimeHours)}</span>
-                      <span>{parseFloat(alt.totalDistanceNm).toLocaleString()} nm</span>
+                    <div className="flex gap-4 text-xs">
+                      <span className="text-emerald-400">${parseFloat(alt.totalCost).toLocaleString()}</span>
+                      <span className="text-white/50">{fmtHours(alt.totalTimeHours)}</span>
                     </div>
                   </div>
                 ))}
