@@ -377,16 +377,16 @@ SELECT
     d::date,
     ROUND((
         200
-        + 0.5 * (d - '2025-04-01'::date)                            -- linear growth trend
+        + 0.5 * (d::date - '2025-04-01'::date)                       -- linear growth trend
         + 30 * SIN(2 * PI() * (EXTRACT(DOY FROM d) - 60) / 365)    -- mild seasonal
         + (RANDOM() * 30 - 15)                                       -- noise ±15
     )::numeric, 1),
     ROUND((
-        (200 + 0.5 * (d - '2025-04-01'::date)
+        (200 + 0.5 * (d::date - '2025-04-01'::date)
          + 30 * SIN(2 * PI() * (EXTRACT(DOY FROM d) - 60) / 365)) * 820
         + (RANDOM() * 6000 - 3000)
     )::numeric, 2),
     GREATEST(1, ROUND((
-        200 + 0.5 * (d - '2025-04-01'::date)
+        200 + 0.5 * (d::date - '2025-04-01'::date)
     ) / 32)::int + FLOOR(RANDOM() * 2)::int)
 FROM generate_series('2025-04-01'::date, '2026-03-31'::date, '1 day'::interval) AS d;
