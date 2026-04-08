@@ -35,6 +35,14 @@ services:
       postgres:
         condition: service_healthy
 
+  frontend:
+    build: ./frontend
+    container_name: shipping-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - app
+
 volumes:
   postgres_data:
     driver: local
