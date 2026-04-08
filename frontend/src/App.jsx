@@ -1,3 +1,20 @@
+import { Routes, Route } from 'react-router-dom'
+import { ScenarioProvider } from './hooks/useScenario'
+import Layout from './components/Layout'
+import DashboardPage from './pages/DashboardPage'
+import RoutesPage from './pages/RoutesPage'
+import ForecastPage from './pages/ForecastPage'
+
 export default function App() {
-  return <div className="p-8"><h2>SmartShipping</h2><p className="text-stripe-body">Loading...</p></div>
+  return (
+    <ScenarioProvider>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<DashboardPage />} />
+          <Route path="routes" element={<RoutesPage />} />
+          <Route path="forecast" element={<ForecastPage />} />
+        </Route>
+      </Routes>
+    </ScenarioProvider>
+  )
 }
