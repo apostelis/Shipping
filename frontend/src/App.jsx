@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { ScenarioProvider } from './hooks/useScenario'
 import Layout from './components/Layout'
+import IntroOverlay from './components/IntroOverlay'
 import DashboardPage from './pages/DashboardPage'
 import RoutesPage from './pages/RoutesPage'
 import ForecastPage from './pages/ForecastPage'
@@ -8,6 +9,7 @@ import ForecastPage from './pages/ForecastPage'
 export default function App() {
   return (
     <ScenarioProvider>
+      <IntroOverlay />
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<DashboardPage />} />
