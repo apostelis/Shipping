@@ -10,6 +10,7 @@ export default function ForecastPage() {
   const [selectedLane, setSelectedLane] = useState('')
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('SIMPLE_MOVING_AVERAGE')
   const [forecast, setForecast] = useState(null)
+  const [historical, setHistorical] = useState([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -24,14 +25,20 @@ export default function ForecastPage() {
   useEffect(() => {
     if (!selectedLane) return
     setLoading(true)
-    api.generateForecast({
-      tradeLane: selectedLane,
-      cargoType: 'CONTAINER',
-      forecastHorizon: 30,
-      granularity: 'DAILY',
-      algorithm: selectedAlgorithm,
-    })
-      .then(setForecast)
+    Promise.all([
+      api.generateForecast({
+        tradeLane: selectedLane,
+        cargoType: 'CONTAINER',
+        forecastHorizon: 30,
+        granularity: 'DAILY',
+        algorithm: selectedAlgorithm,
+      }),
+      api.getHistoricalDemand(selectedLane, 90),
+    ])
+      .then(([forecastResult, historicalData]) => {
+        setForecast(forecastResult)
+        setHistorical(historicalData)
+      })
       .finally(() => setLoading(false))
   }, [selectedLane, selectedAlgorithm, activeScenario])
 
@@ -73,7 +80,7 @@ export default function ForecastPage() {
       {forecast && forecast.forecastPoints && (
         <div className="bg-white border border-stripe-border rounded-stripe p-6 shadow-stripe-ambient">
           <ForecastChart
-            historicalData={[]}
+            historicalData={historical}
             forecastData={forecast.forecastPoints}
             algorithmName={forecast.algorithm?.replace(/_/g, ' ') || selectedAlgorithm}
           />

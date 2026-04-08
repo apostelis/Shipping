@@ -34,4 +34,6 @@ export const api = {
   getAlternativeRoutes: (origin, dest, max = 3) =>
     fetchJson(`/routes/alternatives?origin=${origin}&destination=${dest}&maxAlternatives=${max}`),
   applyScenario: (scenarioId) => postJson(`/scenarios/${scenarioId}/activate`, {}),
+  getHistoricalDemand: (tradeLane, days = 90) =>
+    fetchJson(`/historical/demand?tradeLane=${tradeLane}&days=${days}`),
 }
