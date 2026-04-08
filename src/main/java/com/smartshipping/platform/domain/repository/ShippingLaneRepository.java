@@ -21,7 +21,7 @@ public interface ShippingLaneRepository extends JpaRepository<ShippingLane, Long
 
     List<ShippingLane> findByIsActive(Boolean isActive);
 
-    @Query("SELECT s FROM ShippingLane s WHERE s.isActive = true")
+    @Query("SELECT s FROM ShippingLane s JOIN FETCH s.originPort JOIN FETCH s.destinationPort WHERE s.isActive = true")
     List<ShippingLane> findAllActive();
 
     @Query("SELECT s FROM ShippingLane s WHERE s.originPort.code = :code OR s.destinationPort.code = :code")

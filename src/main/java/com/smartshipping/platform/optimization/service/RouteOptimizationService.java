@@ -5,7 +5,9 @@ import com.smartshipping.platform.domain.repository.ShippingLaneRepository;
 import com.smartshipping.platform.optimization.algorithm.DijkstraRouteOptimizer;
 import com.smartshipping.platform.optimization.model.OptimalRoute;
 import com.smartshipping.platform.optimization.model.OptimizationCriteria;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -21,6 +23,11 @@ public class RouteOptimizationService {
 
     public RouteOptimizationService(ShippingLaneRepository shippingLaneRepository) {
         this.shippingLaneRepository = shippingLaneRepository;
+    }
+
+    @PostConstruct
+    @Transactional(readOnly = true)
+    public void init() {
         initializeRouteGraph();
     }
 
@@ -128,10 +135,12 @@ public class RouteOptimizationService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public void refreshRouteGraph() {
         initializeRouteGraph();
     }
 
+    @Transactional(readOnly = true)
     public void applyScenario(List<String> disabledPorts, List<String> disabledLaneKeys) {
         this.routeOptimizer = new DijkstraRouteOptimizer();
         List<ShippingLane> lanes = shippingLaneRepository.findAllActive();
