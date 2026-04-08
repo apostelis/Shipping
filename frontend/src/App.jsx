@@ -4,6 +4,7 @@ import { ScenarioProvider, useScenario } from './hooks/useScenario'
 import Layout from './components/Layout'
 import IntroOverlay from './components/IntroOverlay'
 import AlertToast from './components/AlertToast'
+import ScenarioTransition from './components/ScenarioTransition'
 import DashboardPage from './pages/DashboardPage'
 import RoutesPage from './pages/RoutesPage'
 import ForecastPage from './pages/ForecastPage'
@@ -13,6 +14,7 @@ function AppContent() {
   return (
     <>
       <AlertToast scenarioId={activeScenario} />
+      <ScenarioTransition scenarioId={activeScenario} />
       <IntroOverlay />
       <Routes>
         <Route element={<Layout />}>
