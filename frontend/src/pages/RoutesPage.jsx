@@ -4,6 +4,14 @@ import { useScenario } from '../hooks/useScenario'
 import RouteMap from '../components/RouteMap'
 import ComparisonTable from '../components/ComparisonTable'
 
+const fmtHours = (h) => {
+  const hours = parseFloat(h)
+  if (hours < 24) return `${hours.toFixed(0)}h`
+  const days = Math.floor(hours / 24)
+  const rem = Math.round(hours % 24)
+  return `${days}d ${rem}h`
+}
+
 export default function RoutesPage() {
   const { activeScenario } = useScenario()
   const [ports, setPorts] = useState([])
@@ -102,7 +110,7 @@ export default function RoutesPage() {
               <span className="text-stripe-purple text-2xl font-light">AI</span>
               <div>
                 <p className="text-sm font-normal text-stripe-navy">Route optimized with {result.segments?.length || 0} stops</p>
-                <p className="text-xs text-stripe-body">Total cost: ${parseFloat(result.totalCost).toLocaleString()} | Transit: {parseFloat(result.totalTimeHours).toFixed(0)}h</p>
+                <p className="text-xs text-stripe-body">Total cost: ${parseFloat(result.totalCost).toLocaleString()} | Transit: {fmtHours(result.totalTimeHours)}</p>
               </div>
               <span className="ai-badge">Powered by AI</span>
             </div>
@@ -122,7 +130,7 @@ export default function RoutesPage() {
                     </p>
                     <div className="mt-2 flex gap-4 text-xs text-stripe-body">
                       <span>${parseFloat(alt.totalCost).toLocaleString()}</span>
-                      <span>{parseFloat(alt.totalTimeHours).toFixed(0)}h</span>
+                      <span>{fmtHours(alt.totalTimeHours)}</span>
                       <span>{parseFloat(alt.totalDistanceNm).toLocaleString()} nm</span>
                     </div>
                   </div>

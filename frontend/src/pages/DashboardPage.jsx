@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useScenario } from '../hooks/useScenario'
 import { api } from '../api/client'
 import KpiCard from '../components/KpiCard'
+import { SkeletonCard } from '../components/LoadingSkeleton'
 
 export default function DashboardPage() {
   const { activeScenario, scenarios } = useScenario()
@@ -23,6 +24,12 @@ export default function DashboardPage() {
           </p>
         )}
       </div>
+
+      {!kpis && (
+        <div className="grid grid-cols-4 gap-6 mb-8">
+          {[0, 1, 2, 3].map(i => <SkeletonCard key={i} />)}
+        </div>
+      )}
 
       {kpis && (
         <div className="grid grid-cols-4 gap-6 mb-8">

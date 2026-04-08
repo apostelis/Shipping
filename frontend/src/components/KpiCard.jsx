@@ -15,7 +15,8 @@ export default function KpiCard({ label, value, unit, trend, description }) {
       const elapsed = now - startTime
       const progress = Math.min(elapsed / duration, 1)
       const eased = 1 - Math.pow(1 - progress, 3)
-      setDisplayed((eased * target).toFixed(1))
+      const current = eased * target
+      setDisplayed(Number.isInteger(target) ? Math.round(current).toString() : current.toFixed(1))
       if (progress < 1) requestAnimationFrame(tick)
     }
     requestAnimationFrame(tick)

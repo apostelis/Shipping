@@ -1,15 +1,6 @@
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, CircleMarker, Popup, Polyline, useMap } from 'react-leaflet'
 import { useEffect } from 'react'
 import 'leaflet/dist/leaflet.css'
-import L from 'leaflet'
-
-// Fix default marker icon issue in Leaflet + Vite
-delete L.Icon.Default.prototype._getIconUrl
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-})
 
 function FitBounds({ ports }) {
   const map = useMap()
@@ -36,15 +27,24 @@ export default function RouteMap({ ports, optimizedRoute, naiveRoute }) {
       <FitBounds ports={ports} />
 
       {ports.map((port) => (
-        <Marker
+        <CircleMarker
           key={port.code}
-          position={[parseFloat(port.latitude), parseFloat(port.longitude)]}
+          center={[parseFloat(port.latitude), parseFloat(port.longitude)]}
+          radius={6}
+          pathOptions={{
+            color: '#533afd',
+            fillColor: '#533afd',
+            fillOpacity: 0.8,
+            weight: 2,
+          }}
         >
           <Popup>
-            <strong>{port.name}</strong><br />
-            {port.country} ({port.code})
+            <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+              <strong style={{ fontWeight: 400 }}>{port.name}</strong><br />
+              <span style={{ color: '#64748d', fontSize: '12px' }}>{port.country} ({port.code})</span>
+            </div>
           </Popup>
-        </Marker>
+        </CircleMarker>
       ))}
 
       {naiveRoute && (
