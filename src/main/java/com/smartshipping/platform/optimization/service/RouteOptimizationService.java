@@ -131,4 +131,26 @@ public class RouteOptimizationService {
     public void refreshRouteGraph() {
         initializeRouteGraph();
     }
+
+    public void applyScenario(List<String> disabledPorts, List<String> disabledLaneKeys) {
+        this.routeOptimizer = new DijkstraRouteOptimizer();
+        List<ShippingLane> lanes = shippingLaneRepository.findAllActive();
+        List<DijkstraRouteOptimizer.LaneData> laneDataList = lanes.stream()
+                .filter(lane -> !disabledPorts.contains(lane.getOriginPort().getCode())
+                        && !disabledPorts.contains(lane.getDestinationPort().getCode()))
+                .filter(lane -> !disabledLaneKeys.contains(
+                        lane.getOriginPort().getCode() + "-" + lane.getDestinationPort().getCode()))
+                .map(lane -> new DijkstraRouteOptimizer.LaneData(
+                        lane.getOriginPort().getCode(),
+                        lane.getDestinationPort().getCode(),
+                        lane.getDistanceNm(),
+                        lane.getEstimatedTimeHours(),
+                        lane.getBaseCost(),
+                        lane.getFuelCost(),
+                        lane.getTransitFee(),
+                        lane.getCanalFee()
+                ))
+                .toList();
+        routeOptimizer.loadFromShippingLanes(laneDataList);
+    }
 }
