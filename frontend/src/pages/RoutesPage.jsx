@@ -77,6 +77,89 @@ export default function RoutesPage() {
         Select origin and destination ports to find AI-optimized shipping routes.
       </p>
 
+      {/* Scenario impact banner */}
+      {activeScenario !== 'normal' && (
+        <div className={`rounded-stripe p-4 mb-6 border ${
+          activeScenario === 'hormuz-blockade'
+            ? dark ? 'bg-red-950/30 border-red-500/20' : 'bg-red-50 border-red-200'
+            : activeScenario === 'port-disruption'
+              ? dark ? 'bg-amber-950/30 border-amber-500/20' : 'bg-amber-50 border-amber-200'
+              : dark ? 'bg-violet-950/30 border-violet-500/20' : 'bg-violet-50 border-violet-200'
+        }`}>
+          <div className="flex items-start gap-3">
+            <span className={`mt-0.5 text-lg ${
+              activeScenario === 'hormuz-blockade' ? 'text-red-400' :
+              activeScenario === 'port-disruption' ? 'text-amber-400' : 'text-violet-400'
+            }`}>
+              {activeScenario === 'hormuz-blockade' ? '\u26A0' : activeScenario === 'port-disruption' ? '\u26A1' : '\uD83D\uDCC8'}
+            </span>
+            <div>
+              <p className={`text-sm font-medium ${dark ? 'text-white/90' : 'text-stripe-navy'}`}>
+                {activeScenario === 'hormuz-blockade' && 'Strait of Hormuz Blockade \u2014 Gulf routes disrupted'}
+                {activeScenario === 'port-disruption' && 'Rotterdam Port Closed \u2014 Northern Europe routes disrupted'}
+                {activeScenario === 'demand-spike' && 'Demand Surge Active \u2014 Mediterranean lanes under pressure'}
+              </p>
+              <p className={`text-xs mt-1 ${dark ? 'text-white/50' : 'text-stripe-body'}`}>
+                {activeScenario === 'hormuz-blockade' && 'AI has removed blocked lanes from the graph and is rerouting all Gulf traffic via Cape of Good Hope. Try routing Dubai \u2192 Rotterdam to see the crisis reroute.'}
+                {activeScenario === 'port-disruption' && 'Rotterdam is offline. AI is rerouting European traffic through Hamburg, Valencia, and Mediterranean alternatives. Try routing Shanghai \u2192 Rotterdam to see the impact.'}
+                {activeScenario === 'demand-spike' && 'High demand on MED-NORTHEUROPE is increasing costs. AI is finding cost-efficient alternatives. Try routing Piraeus \u2192 Rotterdam.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Suggested routes */}
+      {activeScenario !== 'normal' && (
+        <div className="flex gap-2 mb-6 flex-wrap">
+          <span className={`text-xs self-center mr-1 ${dark ? 'text-white/30' : 'text-stripe-body'}`}>Try:</span>
+          {activeScenario === 'hormuz-blockade' && (
+            <>
+              <button onClick={() => { setOrigin('AEJEA'); setDestination('NLRTM'); }}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${dark ? 'border-white/10 text-white/60 hover:border-violet-500/30 hover:text-violet-400' : 'border-stripe-border text-stripe-body hover:border-stripe-purple hover:text-stripe-purple'}`}>
+                Dubai &rarr; Rotterdam
+              </button>
+              <button onClick={() => { setOrigin('INNSA'); setDestination('AEJEA'); }}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${dark ? 'border-white/10 text-white/60 hover:border-violet-500/30 hover:text-violet-400' : 'border-stripe-border text-stripe-body hover:border-stripe-purple hover:text-stripe-purple'}`}>
+                Mumbai &rarr; Dubai
+              </button>
+              <button onClick={() => { setOrigin('SAJED'); setDestination('NLRTM'); }}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${dark ? 'border-white/10 text-white/60 hover:border-violet-500/30 hover:text-violet-400' : 'border-stripe-border text-stripe-body hover:border-stripe-purple hover:text-stripe-purple'}`}>
+                Jeddah &rarr; Rotterdam
+              </button>
+            </>
+          )}
+          {activeScenario === 'port-disruption' && (
+            <>
+              <button onClick={() => { setOrigin('CNSHA'); setDestination('NLRTM'); }}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${dark ? 'border-white/10 text-white/60 hover:border-violet-500/30 hover:text-violet-400' : 'border-stripe-border text-stripe-body hover:border-stripe-purple hover:text-stripe-purple'}`}>
+                Shanghai &rarr; Rotterdam
+              </button>
+              <button onClick={() => { setOrigin('CNSHA'); setDestination('DEHAM'); }}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${dark ? 'border-white/10 text-white/60 hover:border-violet-500/30 hover:text-violet-400' : 'border-stripe-border text-stripe-body hover:border-stripe-purple hover:text-stripe-purple'}`}>
+                Shanghai &rarr; Hamburg
+              </button>
+              <button onClick={() => { setOrigin('AEJEA'); setDestination('NLRTM'); }}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${dark ? 'border-white/10 text-white/60 hover:border-violet-500/30 hover:text-violet-400' : 'border-stripe-border text-stripe-body hover:border-stripe-purple hover:text-stripe-purple'}`}>
+                Dubai &rarr; Rotterdam
+              </button>
+            </>
+          )}
+          {activeScenario === 'demand-spike' && (
+            <>
+              <button onClick={() => { setOrigin('GRPIR'); setDestination('NLRTM'); }}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${dark ? 'border-white/10 text-white/60 hover:border-violet-500/30 hover:text-violet-400' : 'border-stripe-border text-stripe-body hover:border-stripe-purple hover:text-stripe-purple'}`}>
+                Piraeus &rarr; Rotterdam
+              </button>
+              <button onClick={() => { setOrigin('GRPIR'); setDestination('DEHAM'); }}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${dark ? 'border-white/10 text-white/60 hover:border-violet-500/30 hover:text-violet-400' : 'border-stripe-border text-stripe-body hover:border-stripe-purple hover:text-stripe-purple'}`}>
+                Piraeus &rarr; Hamburg
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
       <div className="flex gap-4 mb-6">
         <select value={origin} onChange={e => setOrigin(e.target.value)} className={selectClass}>
           {ports.map(p => <option key={p.code} value={p.code}>{p.name}</option>)}
@@ -120,6 +203,63 @@ export default function RoutesPage() {
           )}
 
           <ComparisonTable optimized={result} naive={alternatives[alternatives.length - 1]} />
+
+          {/* Why this route explanation */}
+          {result && result.segments && result.segments.length > 0 && (
+            <div className={`rounded-stripe p-5 border ${dark ? 'bg-white/[0.02] border-white/5' : 'bg-gray-50 border-stripe-border'}`}>
+              <div className="flex items-center gap-2 mb-3">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke={dark ? '#a78bfa' : '#533afd'} strokeWidth="1.5">
+                  <circle cx="8" cy="8" r="7"/>
+                  <path d="M8 5v3M8 10.5v.5"/>
+                </svg>
+                <span className={`text-xs font-medium tracking-wider uppercase ${dark ? 'text-white/40' : 'text-stripe-body'}`}>Why this route</span>
+              </div>
+              <div className={`text-sm font-light leading-relaxed ${dark ? 'text-white/60' : 'text-stripe-body'}`}>
+                {(() => {
+                  const segments = result.segments
+                  const isMultiStop = segments.length > 1
+                  const stops = segments.map(s => s.originPortCode).concat(segments[segments.length - 1].destinationPortCode)
+                  const naive = alternatives[alternatives.length - 1]
+                  const hasSavings = naive && naive.totalCost > 0 && result.totalCost < naive.totalCost
+
+                  const parts = []
+
+                  if (isMultiStop) {
+                    parts.push(`AI selected a ${segments.length}-segment route via ${stops.slice(1, -1).join(', ')} instead of a direct path.`)
+                  } else {
+                    parts.push(`AI found the direct route ${stops[0]} \u2192 ${stops[1]} is already optimal for the selected objective.`)
+                  }
+
+                  if (objective === 'COST') {
+                    parts.push('Optimizing for lowest total cost including fuel, canal fees, and transit charges.')
+                  } else if (objective === 'TIME') {
+                    parts.push('Optimizing for fastest transit time, accepting higher cost where necessary.')
+                  } else if (objective === 'DISTANCE') {
+                    parts.push('Optimizing for shortest nautical distance.')
+                  } else {
+                    parts.push('Using balanced optimization that weighs cost, time, and distance together.')
+                  }
+
+                  if (hasSavings) {
+                    const savedPct = ((1 - result.totalCost / naive.totalCost) * 100).toFixed(0)
+                    const savedHrs = (naive.totalTimeHours - result.totalTimeHours).toFixed(0)
+                    if (savedPct > 0) parts.push(`This saves ${savedPct}% in cost compared to the longest alternative.`)
+                    if (savedHrs > 0) parts.push(`Transit is ${fmtHours(Math.abs(savedHrs))} shorter.`)
+                  }
+
+                  if (activeScenario === 'hormuz-blockade' && (origin === 'AEJEA' || origin === 'SAJED' || destination === 'AEJEA' || destination === 'SAJED')) {
+                    parts.push('Gulf routes through the Strait of Hormuz are currently blocked. The AI has automatically rerouted via available alternatives.')
+                  }
+
+                  if (activeScenario === 'port-disruption' && (origin === 'NLRTM' || destination === 'NLRTM')) {
+                    parts.push('Rotterdam is currently offline. The AI has rerouted through the nearest available port with sufficient capacity.')
+                  }
+
+                  return parts.join(' ')
+                })()}
+              </div>
+            </div>
+          )}
 
           {alternatives.length > 1 && (
             <div>
