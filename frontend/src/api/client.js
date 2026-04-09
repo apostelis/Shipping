@@ -36,4 +36,5 @@ export const api = {
   applyScenario: (scenarioId) => postJson(`/scenarios/${scenarioId}/activate`, {}),
   getHistoricalDemand: (tradeLane, days = 90, scenarioId = 'normal') =>
     fetchJson(`/historical/demand?tradeLane=${tradeLane}&days=${days}&scenarioId=${scenarioId}`),
+  refreshFeed: () => postJson('/feed/refresh', {}),
 }

@@ -15,6 +15,8 @@ export default function ForecastPage() {
   const [forecast, setForecast] = useState(null)
   const [historical, setHistorical] = useState([])
   const [loading, setLoading] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
     Promise.all([api.getTradeLanes(), api.getAlgorithms()])
@@ -43,7 +45,17 @@ export default function ForecastPage() {
         setHistorical(historicalData)
       })
       .finally(() => setLoading(false))
-  }, [selectedLane, selectedAlgorithm, activeScenario])
+  }, [selectedLane, selectedAlgorithm, activeScenario, refreshKey])
+
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    try {
+      await api.refreshFeed()
+      setRefreshKey(k => k + 1) // triggers data reload
+    } finally {
+      setRefreshing(false)
+    }
+  }
 
   const isDemandSpike = activeScenario === 'demand-spike' && selectedLane === 'MED-NORTHEUROPE'
 
@@ -71,6 +83,22 @@ export default function ForecastPage() {
           }`}>
           {algorithms.map(alg => <option key={alg} value={alg}>{alg.replace(/_/g, ' ')}</option>)}
         </select>
+        <button
+          onClick={handleRefresh}
+          disabled={refreshing}
+          className={`flex items-center gap-2 px-4 py-2 rounded text-sm font-normal transition-colors ${
+            dark
+              ? 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 disabled:opacity-40'
+              : 'bg-gray-50 border border-stripe-border text-stripe-navy hover:bg-gray-100 disabled:opacity-40'
+          }`}
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"
+            className={refreshing ? 'animate-spin' : ''}>
+            <path d="M1 7a6 6 0 0111.3-2.8M13 7A6 6 0 011.7 9.8"/>
+            <path d="M13 1v4h-4M1 13V9h4"/>
+          </svg>
+          {refreshing ? 'Pulling live data...' : 'Refresh IMF Data'}
+        </button>
       </div>
 
       {isDemandSpike && (
