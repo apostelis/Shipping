@@ -44,12 +44,10 @@ export default function RoutesPage() {
     }
   }
 
-  // Auto-optimize on first load
+  // Auto-optimize on any change
   useEffect(() => {
     if (origin && destination) runOptimize(origin, destination, objective)
-  }, [origin, destination])
-
-  const handleOptimize = () => runOptimize(origin, destination, objective)
+  }, [origin, destination, objective, activeScenario])
 
   const getPortCoords = (code) => {
     const p = ports.find(port => port.code === code)
@@ -93,10 +91,11 @@ export default function RoutesPage() {
           <option value="TIME">Minimize Time</option>
           <option value="DISTANCE">Minimize Distance</option>
         </select>
-        <button onClick={handleOptimize} disabled={loading}
-          className="bg-stripe-purple text-white px-4 py-2 rounded text-sm font-normal hover:bg-stripe-purple-hover transition-colors disabled:opacity-50">
-          {loading ? 'Optimizing...' : 'Optimize Route'}
-        </button>
+        {loading && (
+          <span className={`text-xs self-center ${dark ? 'text-violet-400' : 'text-stripe-purple'}`}>
+            Optimizing...
+          </span>
+        )}
       </div>
 
       <RouteMap ports={ports} optimizedRoute={optimizedCoords} naiveRoute={naiveCoords} originCode={origin} destinationCode={destination} />
