@@ -36,7 +36,7 @@ export default function ForecastPage() {
         granularity: 'DAILY',
         algorithm: selectedAlgorithm,
       }),
-      api.getHistoricalDemand(selectedLane, 90),
+      api.getHistoricalDemand(selectedLane, 90, activeScenario),
     ])
       .then(([forecastResult, historicalData]) => {
         setForecast(forecastResult)
