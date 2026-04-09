@@ -5,6 +5,7 @@ import { useTheme } from '../hooks/useTheme'
 import { fmtDollar, fmtDollarFull, fmtHours } from '../utils/format'
 import RouteMap from '../components/RouteMap'
 import ComparisonTable from '../components/ComparisonTable'
+import BookingQueue from '../components/BookingQueue'
 
 export default function RoutesPage() {
   const { activeScenario } = useScenario()
@@ -165,6 +166,11 @@ export default function RoutesPage() {
           )}
         </div>
       )}
+
+      <BookingQueue onSelectBooking={(b) => {
+        setOrigin(b.originCode)
+        setDestination(b.destinationCode)
+      }} />
 
       <div className="flex gap-4 mb-6 flex-wrap items-center">
         <select

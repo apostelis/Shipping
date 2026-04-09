@@ -39,4 +39,5 @@ export const api = {
   getHistoricalDemand: (tradeLane, days = 90, scenarioId = 'normal') =>
     fetchJson(`/historical/demand?tradeLane=${tradeLane}&days=${days}&scenarioId=${scenarioId}`),
   refreshFeed: () => postJson('/feed/refresh', {}),
+  getBookings: (status = 'PENDING') => fetchJson(`/bookings?status=${status}`),
 }
