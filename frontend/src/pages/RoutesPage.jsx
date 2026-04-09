@@ -15,6 +15,7 @@ export default function RoutesPage() {
   const [objective, setObjective] = useState('BALANCED')
   const [result, setResult] = useState(null)
   const [alternatives, setAlternatives] = useState([])
+  const [selectedAltIndex, setSelectedAltIndex] = useState(0)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -39,6 +40,7 @@ export default function RoutesPage() {
       ])
       setResult(optimized)
       setAlternatives(alts)
+      setSelectedAltIndex(0)
     } finally {
       setLoading(false)
     }
@@ -266,9 +268,16 @@ export default function RoutesPage() {
               <h3 className="mb-3">Alternative Routes</h3>
               <div className="grid grid-cols-3 gap-3">
                 {alternatives.map((alt, i) => (
-                  <div key={alt.routeId} className={`border rounded-stripe p-4 transition-colors ${dark ? 'bg-gray-950 border-white/5 hover:border-violet-500/20' : 'bg-white border-stripe-border hover:border-stripe-purple/30 shadow-stripe-ambient'}`}>
+                  <div key={alt.routeId} onClick={() => { setResult(alt); setSelectedAltIndex(i); }}
+                    className={`border rounded-stripe p-4 transition-colors cursor-pointer ${
+                      selectedAltIndex === i
+                        ? dark ? 'bg-violet-950/30 border-violet-500/40' : 'bg-stripe-purple/5 border-stripe-purple/40'
+                        : dark ? 'bg-gray-950 border-white/5 hover:border-violet-500/20' : 'bg-white border-stripe-border hover:border-stripe-purple/30 shadow-stripe-ambient'
+                    }`}>
                     <div className="flex items-center justify-between mb-2">
-                      <p className={`text-sm font-normal ${dark ? 'text-white/80' : 'text-stripe-navy'}`}>Route {i + 1}</p>
+                      <p className={`text-sm font-normal ${dark ? 'text-white/80' : 'text-stripe-navy'}`}>
+                        {selectedAltIndex === i ? '● ' : ''}Route {i + 1}
+                      </p>
                       <span className={`text-[10px] font-mono ${dark ? 'text-white/30' : 'text-stripe-body'}`}>{parseFloat(alt.totalDistanceNm).toLocaleString()} nm</span>
                     </div>
                     <p className={`text-[10px] mb-3 ${dark ? 'text-white/40' : 'text-stripe-body'}`}>
