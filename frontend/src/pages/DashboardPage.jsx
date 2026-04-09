@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useScenario } from '../hooks/useScenario'
 import { useTheme } from '../hooks/useTheme'
 import { api } from '../api/client'
@@ -51,7 +52,7 @@ export default function DashboardPage() {
         <FinancialImpact scenarioId={activeScenario} />
         <RoiCalculator scenarioId={activeScenario} />
         <div className="space-y-4">
-          <a href="/routes" className={`block rounded-stripe p-5 transition-shadow border ${
+          <Link to="/routes" className={`block rounded-stripe p-5 transition-shadow border ${
             dark
               ? 'bg-white/5 border-white/5 hover:border-violet-500/20'
               : 'bg-white border-stripe-border shadow-stripe-ambient hover:shadow-stripe'
@@ -61,8 +62,8 @@ export default function DashboardPage() {
               AI-powered cost, time, and distance optimization across global shipping lanes.
             </p>
             <span className={`inline-block mt-3 text-sm font-normal ${dark ? 'text-violet-400' : 'text-stripe-purple'}`}>Explore routes &rarr;</span>
-          </a>
-          <a href="/forecast" className={`block rounded-stripe p-5 transition-shadow border ${
+          </Link>
+          <Link to="/forecast" className={`block rounded-stripe p-5 transition-shadow border ${
             dark
               ? 'bg-white/5 border-white/5 hover:border-violet-500/20'
               : 'bg-white border-stripe-border shadow-stripe-ambient hover:shadow-stripe'
@@ -72,7 +73,7 @@ export default function DashboardPage() {
               Predictive demand intelligence with confidence intervals and early warning.
             </p>
             <span className={`inline-block mt-3 text-sm font-normal ${dark ? 'text-violet-400' : 'text-stripe-purple'}`}>View forecasts &rarr;</span>
-          </a>
+          </Link>
         </div>
       </div>
     </div>
