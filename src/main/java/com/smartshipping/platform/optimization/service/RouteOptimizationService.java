@@ -141,6 +141,43 @@ public class RouteOptimizationService {
     }
 
     @Transactional(readOnly = true)
+    public void applyVesselConstraint(double vesselDraftM) {
+        this.routeOptimizer = new DijkstraRouteOptimizer();
+        List<ShippingLane> lanes = shippingLaneRepository.findAllActive();
+
+        List<DijkstraRouteOptimizer.LaneData> laneDataList = lanes.stream()
+                .filter(lane -> {
+                    double originMaxDraft = parseMaxDraft(lane.getOriginPort().getFacilities());
+                    double destMaxDraft = parseMaxDraft(lane.getDestinationPort().getFacilities());
+                    return originMaxDraft >= vesselDraftM && destMaxDraft >= vesselDraftM;
+                })
+                .map(lane -> new DijkstraRouteOptimizer.LaneData(
+                        lane.getOriginPort().getCode(),
+                        lane.getDestinationPort().getCode(),
+                        lane.getDistanceNm(),
+                        lane.getEstimatedTimeHours(),
+                        lane.getBaseCost(),
+                        lane.getFuelCost(),
+                        lane.getTransitFee(),
+                        lane.getCanalFee()
+                ))
+                .toList();
+
+        routeOptimizer.loadFromShippingLanes(laneDataList);
+    }
+
+    private double parseMaxDraft(String facilitiesJson) {
+        if (facilitiesJson == null || facilitiesJson.isEmpty()) return 99.0;
+        try {
+            var node = new com.fasterxml.jackson.databind.ObjectMapper().readTree(facilitiesJson);
+            var maxDraft = node.get("maxDraft");
+            return maxDraft != null ? maxDraft.asDouble(99.0) : 99.0;
+        } catch (Exception e) {
+            return 99.0;
+        }
+    }
+
+    @Transactional(readOnly = true)
     public void applyScenario(List<String> disabledPorts, List<String> disabledLaneKeys) {
         this.routeOptimizer = new DijkstraRouteOptimizer();
         List<ShippingLane> lanes = shippingLaneRepository.findAllActive();

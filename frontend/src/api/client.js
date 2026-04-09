@@ -33,6 +33,8 @@ export const api = {
   optimizeRoute: (body) => postJson('/routes/optimize', body),
   getAlternativeRoutes: (origin, dest, max = 3) =>
     fetchJson(`/routes/alternatives?origin=${origin}&destination=${dest}&maxAlternatives=${max}`),
+  getVessels: () => fetchJson('/vessels'),
+  applyVesselConstraint: (draftM) => fetch(`/api/v1/routes/apply-vessel?draftM=${draftM}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return null; }),
   applyScenario: (scenarioId) => postJson(`/scenarios/${scenarioId}/activate`, {}),
   getHistoricalDemand: (tradeLane, days = 90, scenarioId = 'normal') =>
     fetchJson(`/historical/demand?tradeLane=${tradeLane}&days=${days}&scenarioId=${scenarioId}`),

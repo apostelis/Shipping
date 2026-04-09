@@ -17,17 +17,21 @@ export default function RoutesPage() {
   const [alternatives, setAlternatives] = useState([])
   const [selectedAltIndex, setSelectedAltIndex] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [vessels, setVessels] = useState([])
+  const [selectedVessel, setSelectedVessel] = useState(null)
 
   useEffect(() => {
-    api.getPorts().then((data) => {
-      setPorts(data)
-      if (data.length >= 2) {
-        const o = data.find(p => p.code === 'CNSHA')?.code || data[0].code
-        const d = data.find(p => p.code === 'NLRTM')?.code || data[1].code
-        setOrigin(o)
-        setDestination(d)
-      }
-    })
+    Promise.all([api.getPorts(), api.getVessels()])
+      .then(([portData, vesselData]) => {
+        setPorts(portData)
+        setVessels(vesselData)
+        if (portData.length >= 2) {
+          const o = portData.find(p => p.code === 'CNSHA')?.code || portData[0].code
+          const d = portData.find(p => p.code === 'NLRTM')?.code || portData[1].code
+          setOrigin(o)
+          setDestination(d)
+        }
+      })
   }, [])
 
   const runOptimize = async (o, d, obj) => {
@@ -49,7 +53,7 @@ export default function RoutesPage() {
   // Auto-optimize on any change
   useEffect(() => {
     if (origin && destination) runOptimize(origin, destination, objective)
-  }, [origin, destination, objective, activeScenario])
+  }, [origin, destination, objective, activeScenario, selectedVessel])
 
   const getPortCoords = (code) => {
     const p = ports.find(port => port.code === code)
@@ -162,7 +166,46 @@ export default function RoutesPage() {
         </div>
       )}
 
-      <div className="flex gap-4 mb-6">
+      <div className="flex gap-4 mb-6 flex-wrap items-center">
+        <select
+          value={selectedVessel || ''}
+          onChange={async (e) => {
+            const vesselId = e.target.value
+            setSelectedVessel(vesselId || null)
+            if (vesselId) {
+              const vessel = vessels.find(v => v.id === vesselId)
+              if (vessel) {
+                const specs = JSON.parse(vessel.specifications || '{}')
+                if (specs.draftM) {
+                  await api.applyVesselConstraint(specs.draftM)
+                }
+              }
+            } else {
+              await api.applyScenario(activeScenario)
+            }
+          }}
+          className={selectClass}
+        >
+          <option value="">Any vessel</option>
+          {vessels.filter(v => v.status === 'ACTIVE').map(v => {
+            const specs = JSON.parse(v.specifications || '{}')
+            return (
+              <option key={v.id} value={v.id}>
+                {v.name} ({v.capacityTeu.toLocaleString()} TEU, {specs.draftM}m draft)
+              </option>
+            )
+          })}
+        </select>
+        {selectedVessel && (() => {
+          const v = vessels.find(vsl => vsl.id === selectedVessel)
+          if (!v) return null
+          const specs = JSON.parse(v.specifications || '{}')
+          return (
+            <span className={`text-xs self-center px-2 py-1 rounded ${dark ? 'bg-white/5 text-white/50' : 'bg-gray-100 text-stripe-body'}`}>
+              {v.name} • {specs.draftM}m draft • {specs.speedKnots}kn
+            </span>
+          )
+        })()}
         <select value={origin} onChange={e => setOrigin(e.target.value)} className={selectClass}>
           {ports.map(p => <option key={p.code} value={p.code}>{p.name}</option>)}
         </select>

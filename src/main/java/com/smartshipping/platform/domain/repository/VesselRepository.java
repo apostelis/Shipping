@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface VesselRepository extends JpaRepository<Vessel, Long> {
+public interface VesselRepository extends JpaRepository<Vessel, java.util.UUID> {
 
     Optional<Vessel> findByImoNumber(String imoNumber);
 
@@ -23,5 +23,5 @@ public interface VesselRepository extends JpaRepository<Vessel, Long> {
     List<Vessel> findAvailableVessels(Integer minCapacity);
 
     @Query("SELECT v FROM Vessel v WHERE v.currentLocation.id = :portId")
-    List<Vessel> findByCurrentLocation(Long portId);
+    List<Vessel> findByCurrentLocation(java.util.UUID portId);
 }
