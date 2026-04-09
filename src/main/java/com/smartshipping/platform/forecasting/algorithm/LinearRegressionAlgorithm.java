@@ -57,15 +57,17 @@ public class LinearRegressionAlgorithm implements ForecastingAlgorithm {
 
         List<ForecastResult.ForecastPoint> forecastPoints = new ArrayList<>();
         LocalDate currentDate = points.get(points.size() - 1).getDate();
-        
+
         for (int i = 1; i <= params.getForecastHorizon(); i++) {
             currentDate = incrementDate(currentDate, params.getGranularity());
             double predicted = intercept + slope * (lastX + i);
+            // Confidence band widens with sqrt of forecast distance — realistic uncertainty propagation
+            BigDecimal wideningMargin = margin.multiply(BigDecimal.valueOf(Math.sqrt(i)));
             forecastPoints.add(ForecastResult.ForecastPoint.builder()
                     .date(currentDate)
-                    .predicted(BigDecimal.valueOf(predicted))
-                    .lowerBound(BigDecimal.valueOf(predicted).subtract(margin))
-                    .upperBound(BigDecimal.valueOf(predicted).add(margin))
+                    .predicted(BigDecimal.valueOf(predicted).setScale(1, RoundingMode.HALF_UP))
+                    .lowerBound(BigDecimal.valueOf(predicted).subtract(wideningMargin).setScale(1, RoundingMode.HALF_UP))
+                    .upperBound(BigDecimal.valueOf(predicted).add(wideningMargin).setScale(1, RoundingMode.HALF_UP))
                     .build());
         }
 
