@@ -1,7 +1,8 @@
 import { MapContainer, TileLayer, CircleMarker, Popup, Polyline, useMap } from 'react-leaflet'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import 'leaflet/dist/leaflet.css'
 import { useTheme } from '../hooks/useTheme'
+import { toSeaRoute } from '../utils/searoute'
 
 function FitBounds({ ports }) {
   const map = useMap()
@@ -32,6 +33,22 @@ function AnimatedRoute({ positions, color, width, animated, glowColor }) {
           dashArray: animated ? '12 8' : undefined,
         }}
       />
+    </>
+  )
+}
+
+function SeaRoutes({ naiveRoute, optimizedRoute, colors }) {
+  const seaNaive = useMemo(() => naiveRoute ? toSeaRoute(naiveRoute) : null, [naiveRoute])
+  const seaOptimized = useMemo(() => optimizedRoute ? toSeaRoute(optimizedRoute) : null, [optimizedRoute])
+
+  return (
+    <>
+      {seaNaive && (
+        <AnimatedRoute positions={seaNaive} color={colors.naive} width={1.5} animated={true} />
+      )}
+      {seaOptimized && (
+        <AnimatedRoute positions={seaOptimized} color={colors.optimized} width={3} animated={false} />
+      )}
     </>
   )
 }
@@ -89,13 +106,7 @@ export default function RouteMap({ ports, optimizedRoute, naiveRoute, originCode
         )
       })}
 
-      {naiveRoute && (
-        <AnimatedRoute positions={naiveRoute} color={colors.naive} width={1.5} animated={true} />
-      )}
-
-      {optimizedRoute && (
-        <AnimatedRoute positions={optimizedRoute} color={colors.optimized} width={3} animated={false} />
-      )}
+      <SeaRoutes naiveRoute={naiveRoute} optimizedRoute={optimizedRoute} colors={colors} />
 
     </MapContainer>
   )
