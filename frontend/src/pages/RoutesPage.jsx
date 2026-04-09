@@ -2,16 +2,9 @@ import { useEffect, useState } from 'react'
 import { api } from '../api/client'
 import { useScenario } from '../hooks/useScenario'
 import { useTheme } from '../hooks/useTheme'
+import { fmtDollar, fmtHours } from '../utils/format'
 import RouteMap from '../components/RouteMap'
 import ComparisonTable from '../components/ComparisonTable'
-
-const fmtHours = (h) => {
-  const hours = parseFloat(h)
-  if (hours < 24) return `${hours.toFixed(0)}h`
-  const days = Math.floor(hours / 24)
-  const rem = Math.round(hours % 24)
-  return `${days}d ${rem}h`
-}
 
 export default function RoutesPage() {
   const { activeScenario } = useScenario()
@@ -143,7 +136,7 @@ export default function RoutesPage() {
                       {alt.segments?.map(s => s.originPortCode).join(' → ')} → {alt.segments?.[alt.segments.length - 1]?.destinationPortCode}
                     </p>
                     <div className="flex gap-4 text-xs">
-                      <span className="text-emerald-400">${parseFloat(alt.totalCost).toLocaleString()}</span>
+                      <span className="text-emerald-400">{fmtDollar(alt.totalCost)}</span>
                       <span className={dark ? 'text-white/50' : 'text-stripe-body'}>{fmtHours(alt.totalTimeHours)}</span>
                     </div>
                   </div>

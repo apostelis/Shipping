@@ -1,4 +1,5 @@
 import { useTheme } from '../hooks/useTheme'
+import { fmtDollar, fmtNumber, fmtHours } from '../utils/format'
 
 export default function ComparisonTable({ optimized, naive }) {
   if (!optimized) return null
@@ -12,14 +13,7 @@ export default function ComparisonTable({ optimized, naive }) {
     costDollar: Math.round(naive.totalCost - optimized.totalCost),
   } : null
 
-  const fmt = (v) => parseFloat(v).toLocaleString()
-  const fmtHours = (h) => {
-    const hours = parseFloat(h)
-    if (hours < 24) return `${hours.toFixed(0)}h`
-    const days = Math.floor(hours / 24)
-    const rem = Math.round(hours % 24)
-    return `${days}d ${rem}h`
-  }
+  const fmt = (v) => fmtNumber(v)
 
   const card = dark ? 'bg-gray-950 border-violet-500/20' : 'bg-white border-stripe-purple/20 shadow-stripe-ambient'
   const cardDim = dark ? 'bg-gray-950 border-white/5' : 'bg-gray-50 border-stripe-border'
@@ -53,7 +47,7 @@ export default function ComparisonTable({ optimized, naive }) {
           </div>
           <div>
             <p className={`text-[10px] uppercase tracking-wider ${label}`}>Total Cost</p>
-            <p className="text-lg font-light text-emerald-400">${fmt(optimized.totalCost)}</p>
+            <p className="text-lg font-light text-emerald-400">{fmtDollar(optimized.totalCost)}</p>
           </div>
         </div>
       </div>
@@ -62,7 +56,7 @@ export default function ComparisonTable({ optimized, naive }) {
       {hasSavings ? (
         <div className={`border rounded-stripe p-5 flex flex-col items-center justify-center text-center ${savingsCenter}`}>
           <p className={`text-[10px] uppercase tracking-wider mb-2 ${savingsLabel}`}>AI Savings</p>
-          <p className="text-4xl font-light text-emerald-400 tracking-tight">${savings.costDollar.toLocaleString()}</p>
+          <p className="text-4xl font-light text-emerald-400 tracking-tight">{fmtDollar(savings.costDollar)}</p>
           <p className={`text-xs mt-1 ${subtext}`}>per voyage</p>
           <div className="flex gap-4 mt-4">
             <div>
@@ -103,7 +97,7 @@ export default function ComparisonTable({ optimized, naive }) {
             </div>
             <div>
               <p className={`text-[10px] uppercase tracking-wider ${labelDim}`}>Total Cost</p>
-              <p className="text-lg font-light text-red-400/70">${fmt(naive.totalCost)}</p>
+              <p className="text-lg font-light text-red-400/70">{fmtDollar(naive.totalCost)}</p>
             </div>
           </div>
         </div>

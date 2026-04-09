@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTheme } from '../hooks/useTheme'
+import { fmtDollar } from '../utils/format'
 
 function AnimatedDollar({ value, prefix = '$', duration = 1200 }) {
   const [displayed, setDisplayed] = useState(0)
@@ -17,7 +18,8 @@ function AnimatedDollar({ value, prefix = '$', duration = 1200 }) {
     requestAnimationFrame(tick)
   }, [value, duration])
 
-  return <span>{prefix}{displayed.toLocaleString()}</span>
+  if (prefix === '') return <span>{displayed.toLocaleString()}</span>
+  return <span>{fmtDollar(displayed)}</span>
 }
 
 const scenarios = {

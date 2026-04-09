@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTheme } from '../hooks/useTheme'
+import { fmtDollar } from '../utils/format'
 
 export default function RoiCalculator({ scenarioId }) {
   const { dark } = useTheme()
@@ -64,18 +65,18 @@ export default function RoiCalculator({ scenarioId }) {
       <div className="space-y-3">
         <div className="flex justify-between items-baseline">
           <p className={`text-[10px] uppercase tracking-wider ${label}`}>Per Voyage Savings</p>
-          <p className="text-sm font-light text-emerald-400">${savingsPerVoyage.toLocaleString()}</p>
+          <p className="text-sm font-light text-emerald-400">{fmtDollar(savingsPerVoyage)}</p>
         </div>
         <div className="flex justify-between items-baseline">
           <p className={`text-[10px] uppercase tracking-wider ${label}`}>Monthly Projection</p>
-          <p className="text-sm font-light text-emerald-400">${monthlySavings.toLocaleString()}</p>
+          <p className="text-sm font-light text-emerald-400">{fmtDollar(monthlySavings)}</p>
         </div>
         <div className={`pt-3 mt-3 border-t ${dark ? 'border-white/5' : 'border-stripe-border'}`}>
           <p className={`text-[10px] uppercase tracking-wider mb-1 ${label}`}>Projected Annual Savings</p>
           <p className="text-3xl font-light text-emerald-400 tracking-tight tabular-nums">
-            ${annualSavings.toLocaleString()}
+            {fmtDollar(annualSavings)}
           </p>
-          <p className={`text-[10px] mt-1 ${sub}`}>{voyagesPerYear.toLocaleString()} voyages/year × ${savingsPerVoyage.toLocaleString()}/voyage</p>
+          <p className={`text-[10px] mt-1 ${sub}`}>{voyagesPerYear.toLocaleString()} voyages/yr × {fmtDollar(savingsPerVoyage)}/voyage</p>
         </div>
       </div>
     </div>

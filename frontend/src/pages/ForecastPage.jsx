@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { api } from '../api/client'
 import { useScenario } from '../hooks/useScenario'
 import { useTheme } from '../hooks/useTheme'
+import { fmtNumber } from '../utils/format'
 import ForecastChart from '../components/ForecastChart'
 
 export default function ForecastPage() {
@@ -110,7 +111,7 @@ export default function ForecastPage() {
           }`}>
             <p className={`text-xs ${dark ? 'text-white/30' : 'text-stripe-body'}`}>Predicted Avg</p>
             <p className={`text-lg font-light ${dark ? 'text-white/80' : 'text-stripe-navy'}`}>
-              {parseFloat(forecast.predictedValue).toLocaleString()} TEU
+              {fmtNumber(forecast.predictedValue)} TEU
             </p>
           </div>
           <div className={`rounded-stripe px-4 py-3 border ${
@@ -118,7 +119,7 @@ export default function ForecastPage() {
           }`}>
             <p className={`text-xs ${dark ? 'text-white/30' : 'text-stripe-body'}`}>Confidence Range</p>
             <p className={`text-lg font-light ${dark ? 'text-white/80' : 'text-stripe-navy'}`}>
-              {parseFloat(forecast.confidenceLower).toLocaleString()} - {parseFloat(forecast.confidenceUpper).toLocaleString()} TEU
+              {fmtNumber(forecast.confidenceLower)} - {fmtNumber(forecast.confidenceUpper)} TEU
             </p>
           </div>
           <span className="ai-badge">Powered by AI</span>
