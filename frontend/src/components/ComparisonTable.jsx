@@ -1,5 +1,5 @@
 import { useTheme } from '../hooks/useTheme'
-import { fmtDollar, fmtNumber, fmtHours } from '../utils/format'
+import { fmtDollar, fmtDollarFull, fmtNumber, fmtNumberFull, fmtHours } from '../utils/format'
 
 export default function ComparisonTable({ optimized, naive }) {
   if (!optimized) return null
@@ -14,6 +14,7 @@ export default function ComparisonTable({ optimized, naive }) {
   } : null
 
   const fmt = (v) => fmtNumber(v)
+  const Tip = ({ children, full }) => <span title={full} className="cursor-default">{children}</span>
 
   const card = dark ? 'bg-gray-950 border-violet-500/20' : 'bg-white border-stripe-purple/20 shadow-stripe-ambient'
   const cardDim = dark ? 'bg-gray-950 border-white/5' : 'bg-gray-50 border-stripe-border'
@@ -39,7 +40,7 @@ export default function ComparisonTable({ optimized, naive }) {
         <div className="space-y-3">
           <div>
             <p className={`text-[10px] uppercase tracking-wider ${label}`}>Distance</p>
-            <p className={`text-lg font-light ${value}`}>{fmt(optimized.totalDistanceNm)} <span className={`text-xs ${unit}`}>nm</span></p>
+            <p className={`text-lg font-light ${value}`}><Tip full={fmtNumberFull(optimized.totalDistanceNm)}>{fmt(optimized.totalDistanceNm)}</Tip> <span className={`text-xs ${unit}`}>nm</span></p>
           </div>
           <div>
             <p className={`text-[10px] uppercase tracking-wider ${label}`}>Transit Time</p>
@@ -47,7 +48,7 @@ export default function ComparisonTable({ optimized, naive }) {
           </div>
           <div>
             <p className={`text-[10px] uppercase tracking-wider ${label}`}>Total Cost</p>
-            <p className="text-lg font-light text-emerald-400">{fmtDollar(optimized.totalCost)}</p>
+            <p className="text-lg font-light text-emerald-400"><Tip full={fmtDollarFull(optimized.totalCost)}>{fmtDollar(optimized.totalCost)}</Tip></p>
           </div>
         </div>
       </div>
@@ -56,7 +57,7 @@ export default function ComparisonTable({ optimized, naive }) {
       {hasSavings ? (
         <div className={`border rounded-stripe p-5 flex flex-col items-center justify-center text-center ${savingsCenter}`}>
           <p className={`text-[10px] uppercase tracking-wider mb-2 ${savingsLabel}`}>AI Savings</p>
-          <p className="text-4xl font-light text-emerald-400 tracking-tight">{fmtDollar(savings.costDollar)}</p>
+          <p className="text-4xl font-light text-emerald-400 tracking-tight"><Tip full={fmtDollarFull(savings.costDollar)}>{fmtDollar(savings.costDollar)}</Tip></p>
           <p className={`text-xs mt-1 ${subtext}`}>per voyage</p>
           <div className="flex gap-4 mt-4">
             <div>
@@ -89,7 +90,7 @@ export default function ComparisonTable({ optimized, naive }) {
           <div className="space-y-3">
             <div>
               <p className={`text-[10px] uppercase tracking-wider ${labelDim}`}>Distance</p>
-              <p className={`text-lg font-light ${valueDim}`}>{fmt(naive.totalDistanceNm)} <span className={`text-xs ${labelDim}`}>nm</span></p>
+              <p className={`text-lg font-light ${valueDim}`}><Tip full={fmtNumberFull(naive.totalDistanceNm)}>{fmt(naive.totalDistanceNm)}</Tip> <span className={`text-xs ${labelDim}`}>nm</span></p>
             </div>
             <div>
               <p className={`text-[10px] uppercase tracking-wider ${labelDim}`}>Transit Time</p>
@@ -97,7 +98,7 @@ export default function ComparisonTable({ optimized, naive }) {
             </div>
             <div>
               <p className={`text-[10px] uppercase tracking-wider ${labelDim}`}>Total Cost</p>
-              <p className="text-lg font-light text-red-400/70">{fmtDollar(naive.totalCost)}</p>
+              <p className="text-lg font-light text-red-400/70"><Tip full={fmtDollarFull(naive.totalCost)}>{fmtDollar(naive.totalCost)}</Tip></p>
             </div>
           </div>
         </div>

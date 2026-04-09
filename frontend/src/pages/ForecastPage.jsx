@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { api } from '../api/client'
 import { useScenario } from '../hooks/useScenario'
 import { useTheme } from '../hooks/useTheme'
-import { fmtNumber } from '../utils/format'
+import { fmtNumber, fmtNumberFull } from '../utils/format'
 import ForecastChart from '../components/ForecastChart'
 
 export default function ForecastPage() {
@@ -111,7 +111,7 @@ export default function ForecastPage() {
           }`}>
             <p className={`text-xs ${dark ? 'text-white/30' : 'text-stripe-body'}`}>Predicted Avg</p>
             <p className={`text-lg font-light ${dark ? 'text-white/80' : 'text-stripe-navy'}`}>
-              {fmtNumber(forecast.predictedValue)} TEU
+              <span title={fmtNumberFull(forecast.predictedValue)} className="cursor-default">{fmtNumber(forecast.predictedValue)}</span> TEU
             </p>
           </div>
           <div className={`rounded-stripe px-4 py-3 border ${
@@ -119,7 +119,7 @@ export default function ForecastPage() {
           }`}>
             <p className={`text-xs ${dark ? 'text-white/30' : 'text-stripe-body'}`}>Confidence Range</p>
             <p className={`text-lg font-light ${dark ? 'text-white/80' : 'text-stripe-navy'}`}>
-              {fmtNumber(forecast.confidenceLower)} - {fmtNumber(forecast.confidenceUpper)} TEU
+              <span title={fmtNumberFull(forecast.confidenceLower)} className="cursor-default">{fmtNumber(forecast.confidenceLower)}</span> - <span title={fmtNumberFull(forecast.confidenceUpper)} className="cursor-default">{fmtNumber(forecast.confidenceUpper)}</span> TEU
             </p>
           </div>
           <span className="ai-badge">Powered by AI</span>
