@@ -40,4 +40,5 @@ export const api = {
     fetchJson(`/historical/demand?tradeLane=${tradeLane}&days=${days}&scenarioId=${scenarioId}`),
   refreshFeed: () => postJson('/feed/refresh', {}),
   getBookings: (status = 'PENDING') => fetchJson(`/bookings?status=${status}`),
+  chat: (message) => postJson('/chat', { message }),
 }

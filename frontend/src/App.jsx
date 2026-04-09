@@ -5,6 +5,7 @@ import Layout from './components/Layout'
 import IntroOverlay from './components/IntroOverlay'
 import AlertToast from './components/AlertToast'
 import ScenarioTransition from './components/ScenarioTransition'
+import ChatPanel from './components/ChatPanel'
 import DashboardPage from './pages/DashboardPage'
 import RoutesPage from './pages/RoutesPage'
 import ForecastPage from './pages/ForecastPage'
@@ -15,6 +16,7 @@ function AppContent() {
     <>
       <AlertToast scenarioId={activeScenario} />
       <ScenarioTransition scenarioId={activeScenario} />
+      <ChatPanel />
       <IntroOverlay />
       <Routes>
         <Route element={<Layout />}>
