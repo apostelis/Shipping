@@ -6,6 +6,7 @@ import { fmtDollar, fmtDollarFull, fmtHours } from '../utils/format'
 import RouteMap from '../components/RouteMap'
 import ComparisonTable from '../components/ComparisonTable'
 import BookingQueue from '../components/BookingQueue'
+import CsvUpload from '../components/CsvUpload'
 
 export default function RoutesPage() {
   const { activeScenario } = useScenario()
@@ -225,6 +226,9 @@ export default function RoutesPage() {
           <option value="TIME">Minimize Time</option>
           <option value="DISTANCE">Minimize Distance</option>
         </select>
+        <CsvUpload endpoint="lanes" label="Import Lanes CSV" onSuccess={() => {
+          if (origin && destination) runOptimize(origin, destination, objective)
+        }} />
         {loading && (
           <span className={`text-xs self-center ${dark ? 'text-violet-400' : 'text-stripe-purple'}`}>
             Optimizing...

@@ -1,0 +1,3 @@
+origin_port,destination_port,distance_nm,time_hours,base_cost,fuel_cost,transit_fee,canal_fee
+CNSHA,NLRTM,10560,587,185000,420000,12000,550000
+NLRTM,USLAX,8050,447,141000,320000,12000,0

@@ -4,6 +4,7 @@ import { useScenario } from '../hooks/useScenario'
 import { useTheme } from '../hooks/useTheme'
 import { fmtNumber, fmtNumberFull } from '../utils/format'
 import ForecastChart from '../components/ForecastChart'
+import CsvUpload from '../components/CsvUpload'
 
 export default function ForecastPage() {
   const { activeScenario } = useScenario()
@@ -99,6 +100,7 @@ export default function ForecastPage() {
           </svg>
           {refreshing ? 'Pulling live data...' : 'Refresh IMF Data'}
         </button>
+        <CsvUpload endpoint="demand" label="Import Demand CSV" onSuccess={() => setRefreshKey(k => k + 1)} />
       </div>
 
       {isDemandSpike && (
