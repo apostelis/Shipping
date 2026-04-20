@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface BookingRepository extends JpaRepository<Booking, Long> {
+public interface BookingRepository extends JpaRepository<Booking, UUID> {
 
     Optional<Booking> findByBookingReference(String bookingReference);
 
@@ -32,4 +33,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT SUM(b.volumeTeu) FROM Booking b WHERE b.status = :status")
     Double sumVolumeByStatus(Booking.BookingStatus status);
+
+    @Query("SELECT b FROM Booking b JOIN FETCH b.originPort JOIN FETCH b.destinationPort WHERE b.status = :status ORDER BY b.bookingDate DESC")
+    List<Booking> findByStatusWithPorts(@Param("status") Booking.BookingStatus status);
 }

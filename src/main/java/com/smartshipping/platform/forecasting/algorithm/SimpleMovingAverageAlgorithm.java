@@ -30,7 +30,7 @@ public class SimpleMovingAverageAlgorithm implements ForecastingAlgorithm {
 
         int windowSize = Math.min(DEFAULT_WINDOW_SIZE, points.size());
         List<BigDecimal> window = new ArrayList<>();
-        
+
         for (int i = points.size() - windowSize; i < points.size(); i++) {
             window.add(points.get(i).getValue());
         }
@@ -39,34 +39,57 @@ public class SimpleMovingAverageAlgorithm implements ForecastingAlgorithm {
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .divide(BigDecimal.valueOf(windowSize), 4, RoundingMode.HALF_UP);
 
+        // Detect trend from recent data (last 30 days vs previous 30 days)
+        BigDecimal dailyTrend = BigDecimal.ZERO;
+        if (points.size() >= 60) {
+            BigDecimal recentAvg = BigDecimal.ZERO;
+            BigDecimal olderAvg = BigDecimal.ZERO;
+            for (int i = points.size() - 30; i < points.size(); i++) {
+                recentAvg = recentAvg.add(points.get(i).getValue());
+            }
+            for (int i = points.size() - 60; i < points.size() - 30; i++) {
+                olderAvg = olderAvg.add(points.get(i).getValue());
+            }
+            recentAvg = recentAvg.divide(BigDecimal.valueOf(30), 4, RoundingMode.HALF_UP);
+            olderAvg = olderAvg.divide(BigDecimal.valueOf(30), 4, RoundingMode.HALF_UP);
+            dailyTrend = recentAvg.subtract(olderAvg).divide(BigDecimal.valueOf(30), 6, RoundingMode.HALF_UP);
+        }
+
         BigDecimal stdDev = calculateStdDev(window, sma);
-        BigDecimal confidenceLevel = params.getConfidenceLevel() != null 
-                ? params.getConfidenceLevel() 
+        BigDecimal confidenceLevel = params.getConfidenceLevel() != null
+                ? params.getConfidenceLevel()
                 : new BigDecimal("1.96");
-        
-        BigDecimal margin = stdDev.multiply(confidenceLevel);
+
+        BigDecimal baseMargin = stdDev.multiply(confidenceLevel);
 
         List<ForecastResult.ForecastPoint> forecastPoints = new ArrayList<>();
         LocalDate currentDate = points.get(points.size() - 1).getDate();
-        
+
         for (int i = 1; i <= params.getForecastHorizon(); i++) {
             currentDate = incrementDate(currentDate, params.getGranularity());
+            // Predicted value follows the trend
+            BigDecimal predicted = sma.add(dailyTrend.multiply(BigDecimal.valueOf(i)));
+            // Confidence band widens over time (sqrt growth — realistic uncertainty propagation)
+            BigDecimal widening = baseMargin.multiply(BigDecimal.valueOf(Math.sqrt(i)));
             forecastPoints.add(ForecastResult.ForecastPoint.builder()
                     .date(currentDate)
-                    .predicted(sma)
-                    .lowerBound(sma.subtract(margin))
-                    .upperBound(sma.add(margin))
+                    .predicted(predicted.setScale(1, RoundingMode.HALF_UP))
+                    .lowerBound(predicted.subtract(widening).setScale(1, RoundingMode.HALF_UP))
+                    .upperBound(predicted.add(widening).setScale(1, RoundingMode.HALF_UP))
                     .build());
         }
+
+        BigDecimal finalPredicted = sma.add(dailyTrend.multiply(BigDecimal.valueOf(params.getForecastHorizon())));
+        BigDecimal finalMargin = baseMargin.multiply(BigDecimal.valueOf(Math.sqrt(params.getForecastHorizon())));
 
         return ForecastResult.builder()
                 .tradeLane(data.getTradeLane())
                 .cargoType(data.getCargoType())
                 .granularity(params.getGranularity())
                 .date(currentDate)
-                .predictedValue(sma)
-                .confidenceLower(sma.subtract(margin))
-                .confidenceUpper(sma.add(margin))
+                .predictedValue(finalPredicted.setScale(1, RoundingMode.HALF_UP))
+                .confidenceLower(finalPredicted.subtract(finalMargin).setScale(1, RoundingMode.HALF_UP))
+                .confidenceUpper(finalPredicted.add(finalMargin).setScale(1, RoundingMode.HALF_UP))
                 .algorithm(getName())
                 .forecastPoints(forecastPoints)
                 .build();

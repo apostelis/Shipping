@@ -1,0 +1,109 @@
+@import "tailwindcss";
+@config "../../tailwind.config.js";
+
+body {
+  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-weight: 300;
+  color: #061b31;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dark body, .dark { color: rgba(255,255,255,0.9); }
+
+h1, h2, h3, h4 {
+  font-weight: 300;
+  color: #061b31;
+}
+
+.dark h1, .dark h2, .dark h3, .dark h4 {
+  color: rgba(255,255,255,0.9);
+}
+
+main h1 { font-size: 3rem; letter-spacing: -0.96px; line-height: 1.15; }
+main h2 { font-size: 2rem; letter-spacing: -0.64px; line-height: 1.10; }
+main h3 { font-size: 1.375rem; letter-spacing: -0.22px; line-height: 1.10; }
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-count-up {
+  animation: countUp 0.6s ease-out forwards;
+}
+
+.leaflet-container {
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Page transitions */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-page-in {
+  animation: fadeSlideIn 0.3s ease-out forwards;
+}
+
+/* Card hover lift */
+.card-lift {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card-lift:hover {
+  box-shadow: rgba(50,50,93,0.25) 0px 30px 45px -30px, rgba(0,0,0,0.1) 0px 18px 36px -18px;
+  transform: translateY(-1px);
+}
+
+/* Powered by AI badge */
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 400;
+  color: #533afd;
+  background: rgba(83, 58, 253, 0.05);
+  border: 1px solid #b9b9f9;
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+/* Dark map theme */
+.dark .leaflet-container {
+  background: #0a0f1e !important;
+}
+
+.dark .leaflet-control-attribution {
+  background: rgba(10, 15, 30, 0.8) !important;
+  color: rgba(255,255,255,0.3) !important;
+  font-size: 9px !important;
+}
+
+.dark .leaflet-control-attribution a {
+  color: rgba(255,255,255,0.3) !important;
+}
+
+.dark .leaflet-control-zoom a {
+  background: rgba(30, 35, 55, 0.9) !important;
+  color: rgba(255,255,255,0.7) !important;
+  border-color: rgba(255,255,255,0.1) !important;
+}
+
+/* Light map controls */
+.leaflet-control-attribution {
+  font-size: 9px !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 6px !important;
+  box-shadow: rgba(50,50,93,0.25) 0px 6px 12px -2px, rgba(0,0,0,0.3) 0px 3px 7px -3px !important;
+}
+
+/* Scenario transition pulse */
+@keyframes scenarioPulse {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  100% { opacity: 0; }
+}

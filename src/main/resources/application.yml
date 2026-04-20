@@ -46,6 +46,9 @@ app:
     secret: ${JWT_SECRET:smartShippingPlatformSecretKeyForJWTTokenGeneration2024SecureKey}
     expiration: 86400000
 
+  anthropic:
+    api-key: ${ANTHROPIC_API_KEY:}
+
   cors:
     allowed-origins: http://localhost:3000,http://localhost:8080
 

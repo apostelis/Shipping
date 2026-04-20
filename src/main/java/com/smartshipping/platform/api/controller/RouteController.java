@@ -62,6 +62,13 @@ public class RouteController {
         return ResponseEntity.ok(routes);
     }
 
+    @PostMapping("/apply-vessel")
+    @Operation(summary = "Apply vessel constraint", description = "Filter routes by vessel draft limits")
+    public ResponseEntity<Void> applyVesselConstraint(@RequestParam double draftM) {
+        routeOptimizationService.applyVesselConstraint(draftM);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/refresh")
     @Operation(summary = "Refresh route graph", description = "Refresh the route optimization graph from database")
     public ResponseEntity<Void> refreshRouteGraph() {
